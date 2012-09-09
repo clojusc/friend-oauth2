@@ -9,7 +9,7 @@
                              [credentials :as creds])))
 
 ;; OAuth2 config
-(defn at-parsefn [body]
+(defn access-token-parsefn [body]
   (clojure.walk/keywordize-keys
    (j/parse-string body)))
 
@@ -29,7 +29,7 @@
                           :redirect_uri (str (:domain (:callback client-config)) (:path (:callback client-config)))
                           :scope "stream,email"}}
 
-   :access-token-url {:url "https://alpha.app.net/oauth/access_token"
+   :access-token-uri {:url "https://alpha.app.net/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :grant_type "authorization_code"
@@ -62,5 +62,5 @@
      :workflows [(oauth2/workflow
                   {:client-config client-config
                    :uri-config uri-config
-                   :at-parsefn at-parsefn
+                   :access-token-parsefn access-token-parsefn
                    :config-auth config-auth})]})))

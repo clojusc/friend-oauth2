@@ -7,8 +7,8 @@
                  [clj-http "0.5.3"]]
   :plugins [[lein-ring "0.7.3"]]
   ;; app.net
-  :ring {:handler friend-oauth2.appnet-handler/app}
+  ;;:ring {:handler friend-oauth2.appnet-handler/app}
   ;; facebook
-  ;;:ring {:handler friend-oauth2.facebook-handler/app}
+  :ring {:handler friend-oauth2.facebook-handler/app}
   :profiles
   {:dev {:dependencies [[ring-mock "0.1.3"]]}})

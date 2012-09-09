@@ -8,7 +8,7 @@
                              [credentials :as creds])))
 
 ;; OAuth2 config
-(defn at-parsefn [body]
+(defn access-token-parsefn [body]
   (clojure.walk/keywordize-keys
   (reduce
    #(merge %1 (clojure.string/split (str %2) #"="))
@@ -29,7 +29,7 @@
                           :redirect_uri
                           (str (:domain (:callback client-config)) (:path (:callback client-config)))}}
 
-   :access-token-url {:url "https://graph.facebook.com/oauth/access_token"
+   :access-token-uri {:url "https://graph.facebook.com/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :redirect_uri (str (:domain (:callback client-config)) (:path (:callback client-config)))
@@ -61,5 +61,5 @@
      :workflows [(oauth2/workflow
                   {:client-config client-config
                    :uri-config uri-config
-                   :at-parsefn at-parsefn
+                   :access-token-parsefn access-token-parsefn
                    :config-auth config-auth})]})))

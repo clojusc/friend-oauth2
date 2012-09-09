@@ -21,21 +21,17 @@
        (contains? (:query-params request) "code")
        (let
            [code (last (last (:query-params request)))
-            token-url (assoc (:access-token-url (:uri-config config))
-                        :query (assoc-in (:query (:access-token-url (:uri-config config))) [:code] code))
+            token-url (assoc (:access-token-uri (:uri-config config))
+                        :query (assoc-in (:query (:access-token-uri (:uri-config config))) [:code] code))
 
             ;; Step 4:
             ;; access_token response. Custom function for handling
-            ;; response body is passwed in via the :at-parsefn
-            response-body ((:at-parsefn config)
+            ;; response body is passwed in via the :access-token-parsefn
+            response-body ((:access-token-parsefn config)
                            (:body (client/post (:url token-url) {:form-params (:query token-url)})))]
 
          ;; TODO: handle exception/error after access_token request.
 
-         ((fn []
-            (println (str "\n\nResponse body after successful FB login: " response-body))
-            (println)
-            
          ;; Auth Map, as expected by Friend on a successful authentication:
          (vary-meta
           ;; Identity map
@@ -49,7 +45,7 @@
           merge
           {:type ::friend/auth}
           {::friend/workflow :oauth2
-           ::friend/redirect-on-auth? true}))))
+           ::friend/redirect-on-auth? true}))
 
        ;; Step 1: redirect to OAuth2 provider.  Code will be in response.
        :else
