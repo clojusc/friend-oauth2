@@ -1,9 +1,9 @@
-(ns friend-test.handler
+(ns friend-oauth2.appnet-handler
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [cemerick.friend :as friend]
-            [friend-oauth2.workflow :as oauth2]
+            [friend-oauth2.oauth2 :as oauth2] ;; TODO: fix namespace, this is stupid.
             [cheshire.core :as j]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
@@ -14,7 +14,7 @@
    (j/parse-string body)))
 
 ;; TODO: add a more robust authorization scheme.
-(def config-auth {:roles #{:friend-test.handler/user}})
+(def config-auth {:roles #{::user}})
 
 (def client-config
   {:client-id ""

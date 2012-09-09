@@ -1,4 +1,4 @@
-(ns friend-oauth2.workflow
+(ns friend-oauth2.oauth2 ;; TODO: fix namespace, this is stupid.
   (:require [cemerick.friend :as friend]
             [clj-http.client :as client]))
 
