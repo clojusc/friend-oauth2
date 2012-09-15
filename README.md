@@ -4,29 +4,23 @@ friend-oauth2 is an oauth2 workflow for Chas Emerick's [Friend][1] library.
 
 This has been tested with [app.net's OAuth2](https://github.com/appdotnet/api-spec/blob/master/auth.md) as well as [Facebook's server-side authentication](https://developers.facebook.com/docs/authentication/server-side/).
 
-## Prerequisites
+## Installation
 
-* [Friend][1]
-* [Leiningen][2]
-* [Compojure][3] (handler examples).
+```clojure
+[friend-oauth2 "0.0.1"]
+```
 
-[1]: https://github.com/cemerick/friend
-[2]: https://github.com/technomancy/leiningen
-[3]: https://github.com/weavejester/compojure
+Obviously requires [Friend][1].
 
-## Running the example handlers
+## Documentation
 
-Set up a application for app.net or Facebook, and in the appropriate handler file, set the client-id, client-secret, and callback per your application's configuration.  Tweak the project.clj.
+For now, the best reference is the [Friend-OAuth2 examples][2]. Also please refer to the [Friend README][1].
 
-To start a web server for the application, run:
+Check out the ring-app handlers in the examples for some examples of how authentication and authorization routes are set up per Friend's config.
 
-    lein ring server(-headless)
+# Writing your own handler.
 
-That should be it.  Checkout the ring-app handlers for some examples of how authentication and authorization routes are set up per Friend's config.
-
-## Write your own handler.
-
-See the one of the handlers (appnet_handler.clj or facebook_handler.clj) for an example.
+See the one of the [example handlers][2] (appdotnet_handler.clj or facebook_handler.clj) for an example.
 
 A brief description of the necessary configuration:
 
@@ -44,7 +38,6 @@ A brief description of the necessary configuration:
 
 * WRITE SOME F#*$ING TESTS
 * Handle exceptions/errors after redirect and access_token request.
-* Fix namespace, it is stupid as it is.
 * Add a better authorization scheme (in terms of authorization and auth-map settings), preferably one which integrates Friend's credential-fn when the access_token is received.
 * Add 'state' parameter by default in redirect/access_token parameters.
 * Move client_id/client_secret to Authorization header (necessary? Good for security or immaterial? Does FB support this?)
@@ -53,3 +46,6 @@ A brief description of the necessary configuration:
 ## License
 
 Distributed under the MIT License (http://dd.mit-license.org/)
+
+[1]: https://github.com/cemerick/friend
+[2]: https://github.com/ddellacosta/friend-oauth2-examples

@@ -1,4 +1,4 @@
-(ns friend-oauth2.oauth2 ;; TODO: fix namespace, this is stupid.
+(ns friend-oauth2.workflow
   (:require [cemerick.friend :as friend]
             [clj-http.client :as client]))
 
@@ -52,7 +52,5 @@
        (ring.util.response/redirect
         (str (:url (:redirect-uri (:uri-config config))) "?"
              (ring.util.codec/form-encode (:query (:redirect-uri (:uri-config config)))))))
-
       ;; If it is not login or callback (if before cond) do...nothing.
-
       )))
