@@ -3,7 +3,7 @@
             [compojure.handler :as handler]
             [compojure.route :as route]
             [cemerick.friend :as friend]
-            [friend-oauth2.workflow :as oauth2] ;; TODO: fix namespace, this is stupid.
+            [friend-oauth2.workflow :as oauth2]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
 
