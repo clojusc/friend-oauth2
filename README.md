@@ -2,7 +2,7 @@
 
 friend-oauth2 is an oauth2 workflow for Chas Emerick's [Friend][1] library.
 
-This has been tested with [app.net's OAuth2](https://github.com/appdotnet/api-spec/blob/master/auth.md) as well as [Facebook's server-side authentication](https://developers.facebook.com/docs/authentication/server-side/).
+[Examples][2] have been implemented for [app.net's OAuth2](https://github.com/appdotnet/api-spec/blob/master/auth.md) as well as [Facebook's server-side authentication](https://developers.facebook.com/docs/authentication/server-side/).
 
 ## Installation
 
@@ -18,7 +18,7 @@ For now, the best reference is the [Friend-OAuth2 examples][2]. Also please refe
 
 Check out the ring-app handlers in the examples for some examples of how authentication and authorization routes are set up per Friend's config.
 
-# Writing your own handler.
+### Writing your own handler.
 
 See the one of the [example handlers][2] (appdotnet_handler.clj or facebook_handler.clj) for an example.
 
