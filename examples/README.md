@@ -1,6 +1,6 @@
 # friend-oauth2-examples
 
-Includes Facebook and App.net examples using [Friend-OAuth2](https://github.com/ddellacosta/friend-oauth2), an OAuth2 workflow for [Friend](https://github.com/cemerick/friend).
+Includes [Facebook (server-side authentication)](https://developers.facebook.com/docs/authentication/server-side/) and [App.net](https://github.com/appdotnet/api-spec/blob/master/auth.md) examples using [Friend-OAuth2](https://github.com/ddellacosta/friend-oauth2), an OAuth2 workflow for [Friend](https://github.com/cemerick/friend).
 
 ## Running
 
