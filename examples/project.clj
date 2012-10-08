@@ -11,5 +11,6 @@
   :plugins [[lein-ring "0.7.5"]]
   :ring {:handler friend-oauth2-examples.facebook-handler/app}
 ;;  :ring {:handler friend-oauth2-examples.appdotnet-handler/app}
+;;  :ring {:handler friend-oauth2-examples.github-handler/app}
   :profiles
   {:dev {:dependencies [[ring-mock "0.1.3"]]}})
