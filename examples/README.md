@@ -31,5 +31,5 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 
 ## Authors
 
-Facebook, App.net examples by [ddellacosta](https://github.com/ddellacosta)
-Github example by [kanej](https://github.com/kanej)
+* Facebook, App.net examples by [ddellacosta](https://github.com/ddellacosta)
+* Github example by [kanej](https://github.com/kanej)
