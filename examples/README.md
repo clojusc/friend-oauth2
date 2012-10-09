@@ -28,3 +28,8 @@ At that point, you should be able to start it up using lein:
 ## License
 
 Distributed under the MIT License (http://dd.mit-license.org/)
+
+## Authors
+
+Facebook, App.net examples by [ddellacosta](https://github.com/ddellacosta)
+Github example by [kanej](https://github.com/kanej)
