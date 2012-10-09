@@ -1,5 +1,5 @@
 (defproject friend-oauth2-examples "0.0.1"
-  :description "Friend Oauth2 Workflow examples, includes App.net and Facebook handlers."
+  :description "Friend Oauth2 Workflow examples, includes App.net, Facebook and Github handlers."
   :url "https://github.com/ddellacosta/friend-oauth2-examples"
   :license {:name "MIT License"
             :url "http://dd.mit-license.org"}
@@ -11,5 +11,6 @@
   :plugins [[lein-ring "0.7.5"]]
   :ring {:handler friend-oauth2-examples.facebook-handler/app}
 ;;  :ring {:handler friend-oauth2-examples.appdotnet-handler/app}
+;;  :ring {:handler friend-oauth2-examples.github-handler/app}
   :profiles
   {:dev {:dependencies [[ring-mock "0.1.3"]]}})
