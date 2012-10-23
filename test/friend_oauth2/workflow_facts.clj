@@ -38,23 +38,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Stubs
-;;
-
-(println (friend-oauth2/format-token-uri ((uri-config-fixture :access-token-uri) :query) "my-code"))
-
-(background
- (client/post "http://example.com"
-              {:form-params 
-               (friend-oauth2/format-token-uri (uri-config-fixture :access-token-uri) "my-code")}) =>
- (fn [& anything] access-token-response-fixture))
-
-(background
- (ring.util.response/redirect (friend-oauth2/format-authorization-uri uri-config-fixture)) =>
- (redirect-with-default-redirect-uri))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
 ;; Dummy responses/requests for various OAuth2 endpoints
 ;;
 
@@ -96,6 +79,19 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
+;; Stubs
+;;
+
+(background
+ (client/post
+  "http://example.com"
+  {:form-params {:client_id "my-client-id", :client_secret "my-client-secret", :redirect_uri "http://127.0.0.1/redirect", :code "my-code"}})
+ => access-token-response-fixture,
+ (ring.util.response/redirect anything)
+ => (redirect-with-default-redirect-uri))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;; Facts (helper functions)
 ;;
 
@@ -121,14 +117,14 @@
 
 (fact
  "Formats the redirect uri"
- (friend-oauth2/format-authorization-uri uri-config-fixture) =>
- "http://example.com?client_id=my-client-id&redirect_uri=http%3A%2F%2F127.0.0.1%2Fredirect")
-  
+ (friend-oauth2/format-authorization-uri uri-config-fixture)
+ => "http://example.com?client_id=my-client-id&redirect_uri=http%3A%2F%2F127.0.0.1%2Fredirect")
+
 (fact
- "Formats the token uri with the authorization code"
- (((friend-oauth2/format-token-uri
-    (uri-config-fixture :access-token-uri) "my-code") :query) :code)
+ "Replaces the authorization code"
+ ((friend-oauth2/replace-authorization-code (uri-config-fixture :access-token-uri) "my-code") :code)
  => "my-code")
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -140,21 +136,22 @@
  (default-workflow-function (default-login-request))
  => (redirect-with-default-redirect-uri))
 
-(future-fact
+(fact
  "extract-access-token is used for access-token-parsefn if none is passed in."
  (default-workflow-function
-   (query-string-to-params (redirect-with-default-redirect-uri))) => {:identity nil, :access_token nil}
-   (provided
-    (friend-oauth2/extract-access-token) => 1 :times 1))
-
-;;(println (friend-oauth2/format-token-uri (uri-config-fixture :access-token-uri) "my-code"))
+   (query-string-to-params (redirect-with-default-redirect-uri)))
+ => {:identity "my-access-token", :access_token "my-access-token"}
+ (provided
+  (friend-oauth2/extract-access-token access-token-response-fixture)
+  => "my-access-token" :times 1))
 
 (fact
  "If there is a code in the request it posts to the token-uri"
  (default-workflow-function
-   (query-string-to-params (redirect-with-default-redirect-uri))) => {:identity nil, :access_token nil}
-   (provided
-    (client/post) => 1 :times 1))
-     ;; ""
-     ;; {:form-params
-     ;;  ((friend-oauth2/format-token-uri (uri-config-fixture :access-token-uri) "my-code") :query)}) => 1 :times 1))
+   (query-string-to-params (redirect-with-default-redirect-uri)))
+ => {:identity "my-access-token", :access_token "my-access-token"}
+ (provided
+  (client/post "http://example.com"
+               {:form-params (friend-oauth2/replace-authorization-code
+                              (uri-config-fixture :access-token-uri) "my-code")})
+  => access-token-response-fixture :times 1))

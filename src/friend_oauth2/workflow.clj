@@ -17,7 +17,7 @@
   (str (authorization-uri :url) "?"
        (codec/form-encode (authorization-uri :query))))
 
-(defn format-token-uri
+(defn replace-authorization-code
   "Formats the token uri with the authorization code"
   [uri-config code]
   (assoc-in (uri-config :query) [:code] code))
@@ -46,63 +46,38 @@
                (:path (:callback (:client-config config))))
             (= (:uri request)
                (or (config :login-uri) "/login")))
-      (do
-        ;;(println request)
-      (cond
-       ;; Step 2, 3:
-       ;; accept callback and get access_token (via POST)
 
-       ;; (TODO send client_id and client_secret
-       ;; parameters via the Authorization header,
-       ;; as described in section 2.3.1 of the spec...?)
+      ;; Step 2, 3:
+      ;; accept callback and get access_token (via POST)
+      (if-let [code (extract-code request)]
+        (let [access-token-uri ((config :uri-config) :access-token-uri)
+              token-url (assoc-in access-token-uri [:query]
+                                  (replace-authorization-code access-token-uri code))
 
-       ;; TODO: handle exception/error after initial redirect.
-
-       (contains? (request :query-params) "code")
-       (let
-           [code (last (last (:query-params request)))
-            token-url (assoc (:access-token-uri (:uri-config config))
-                        :query (assoc-in (:query (:access-token-uri (:uri-config config))) [:code] code))
-
-            ;; Step 4:
-            ;; access_token response. Custom function for handling
-            ;; response body is passwed in via the :access-token-parsefn
-            response-body ((or (config :access-token-parsefn)
-                              'extract-access-token)
-                           (:body
+              ;; Step 4:
+              ;; access_token response. Custom function for handling
+              ;; response body is passwed in via the :access-token-parsefn
+              access-token ((or (config :access-token-parsefn)
+                                extract-access-token)
                             (client/post
                              (:url token-url)
-                             {:form-params (:query token-url)})))]
+                             {:form-params (:query token-url)}))]
 
-         (do
-           (println (str "in workflow:" 
-                         (client/post
-                          (:url token-url)
-                          {:form-params (:query token-url)})))
+          ;; Auth Map, as expected by Friend on a successful authentication:
+          (vary-meta
+           ;; Identity map
+           (merge
+            ;; At the least we will have the access-token,
+            ;; so we will use that for the identity (for now).
+            {:identity access-token
+             :access_token access-token}
+            (:config-auth config))  ;; config-auth is provider specific auth settings
+           ;; Meta-data
+           merge
+           {:type ::friend/auth}
+           {::friend/workflow :oauth2
+            ::friend/redirect-on-auth? true}))
 
-
-         ;; TODO: handle exception/error after access_token request.
-
-         ;; Auth Map, as expected by Friend on a successful authentication:
-         (vary-meta
-          ;; Identity map
-          (merge
-           ;; At the least we will have the access-token,
-           ;; so we will use that for the identity (for now).
-           {:identity (:access_token response-body)
-            :access_token (:access_token response-body)}
-           (:config-auth config))  ;; config-auth is provider specific auth settings
-          ;; Meta-data
-          merge
-          {:type ::friend/auth}
-          {::friend/workflow :oauth2
-           ::friend/redirect-on-auth? true})))
-
-       ;; Step 1: redirect to OAuth2 provider.  Code will be in response.
-       :else
-       (ring.util.response/redirect
-        (str (:url (:authorization-uri (:uri-config config))) "?"
-             (codec/form-encode (:query (:authorization-uri (:uri-config config)))))))
-      ;; If it is not login or callback (if before cond) do...nothing.
-      ))))
-
+        ;; Step 1: redirect to OAuth2 provider.  Code will be in response.
+        (ring.util.response/redirect
+         (format-authorization-uri (config :uri-config)))))))

@@ -7,7 +7,7 @@ friend-oauth2 is an oauth2 workflow for Chas Emerick's [Friend][1] library.
 ## Installation
 
 ```clojure
-[friend-oauth2 "0.0.1"]
+[friend-oauth2 "0.0.2"]
 ```
 
 Obviously requires [Friend][1].
@@ -34,10 +34,14 @@ A brief description of the necessary configuration:
 
 5. `config-auth` ...incomplete, TODO.
 
+## Changelog 0.2.0
+
+* Added tests! Refactored!
+* Made access-token-parsefn optional, as set up to follow spec ()
+* tweaked naming scheme for config ()
+
 ## TODO:
 
-* Set default for access-token-parsefn as it should be standardized based on this: http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1
-* WRITE SOME F#*$ING TESTS
 * Handle exceptions/errors after redirect and access_token request.
 * Add a better authorization scheme (in terms of authorization and auth-map settings), preferably one which integrates Friend's credential-fn when the access_token is received.
 * Add 'state' parameter by default in redirect/access_token parameters.
