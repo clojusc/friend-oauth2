@@ -26,14 +26,14 @@
   {:redirect-uri {:url "https://alpha.app.net/oauth/authenticate"
                   :query {:client_id (:client-id client-config)
                           :response_type "code"
-                          :redirect_uri (str (:domain (:callback client-config)) (:path (:callback client-config)))
+                          :redirect_uri (oauth2/format-config-url client-config)
                           :scope "stream,email"}}
 
    :access-token-uri {:url "https://alpha.app.net/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :grant_type "authorization_code"
-                              :redirect_uri (str (:domain (:callback client-config)) (:path (:callback client-config)))
+                              :redirect_uri (oauth2/format-config-url client-config)
                               :code ""}}})
 
 (defroutes ring-app
