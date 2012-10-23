@@ -36,6 +36,7 @@ A brief description of the necessary configuration:
 
 ## TODO:
 
+* Set default for access-token-parsefn as it should be standardized based on this: http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1
 * WRITE SOME F#*$ING TESTS
 * Handle exceptions/errors after redirect and access_token request.
 * Add a better authorization scheme (in terms of authorization and auth-map settings), preferably one which integrates Friend's credential-fn when the access_token is received.

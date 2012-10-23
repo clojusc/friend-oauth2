@@ -4,18 +4,23 @@
             [ring.util.codec :as codec]
             [cheshire.core :as j]))
 
-(defn format-config-url
-  "Formats URL from domain and path pairs in a map"
+(defn format-config-uri
+  "Formats URI from domain and path pairs in a map"
   [client-config]
   (reduce
    #(str %1 (get-in client-config [:callback %2]))
    "" [:domain :path]))
 
-(defn format-token-url
-  "Formats the token url with the authorization code"
+(defn format-authorization-uri
+  "Formats the authorization uri"
+  [{:keys [authorization-uri]}]
+  (str (authorization-uri :url) "?"
+       (codec/form-encode (authorization-uri :query))))
+
+(defn format-token-uri
+  "Formats the token uri with the authorization code"
   [uri-config code]
-  (assoc-in uri-config [:query]
-            (assoc-in (uri-config :query) [:code] code)))
+  (assoc-in (uri-config :query) [:code] code))
 
 ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.2
 (defn extract-code
@@ -41,6 +46,8 @@
                (:path (:callback (:client-config config))))
             (= (:uri request)
                (or (config :login-uri) "/login")))
+      (do
+        ;;(println request)
       (cond
        ;; Step 2, 3:
        ;; accept callback and get access_token (via POST)
@@ -51,7 +58,7 @@
 
        ;; TODO: handle exception/error after initial redirect.
 
-       (contains? (:query-params request) "code")
+       (contains? (request :query-params) "code")
        (let
            [code (last (last (:query-params request)))
             token-url (assoc (:access-token-uri (:uri-config config))
@@ -60,11 +67,19 @@
             ;; Step 4:
             ;; access_token response. Custom function for handling
             ;; response body is passwed in via the :access-token-parsefn
-            response-body ((:access-token-parsefn config)
+            response-body ((or (config :access-token-parsefn)
+                              'extract-access-token)
                            (:body
                             (client/post
                              (:url token-url)
                              {:form-params (:query token-url)})))]
+
+         (do
+           (println (str "in workflow:" 
+                         (client/post
+                          (:url token-url)
+                          {:form-params (:query token-url)})))
+
 
          ;; TODO: handle exception/error after access_token request.
 
@@ -81,12 +96,13 @@
           merge
           {:type ::friend/auth}
           {::friend/workflow :oauth2
-           ::friend/redirect-on-auth? true}))
+           ::friend/redirect-on-auth? true})))
 
        ;; Step 1: redirect to OAuth2 provider.  Code will be in response.
        :else
        (ring.util.response/redirect
-        (str (:url (:redirect-uri (:uri-config config))) "?"
-             (codec/form-encode (:query (:redirect-uri (:uri-config config)))))))
+        (str (:url (:authorization-uri (:uri-config config))) "?"
+             (codec/form-encode (:query (:authorization-uri (:uri-config config)))))))
       ;; If it is not login or callback (if before cond) do...nothing.
-      )))
+      ))))
+

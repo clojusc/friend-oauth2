@@ -4,7 +4,9 @@
             [cemerick.friend :as friend]
             [clj-http.client :as client]
             [ring.mock.request :as ring-mock]
+            [ring.util.codec :as codec]
             [cheshire.core :as j]))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -17,21 +19,39 @@
    :callback {:domain "http://127.0.0.1" :path "/redirect"}})
 
 (def uri-config-fixture
-  {:access-token-uri {:url "http://example.com"
+  {:authorization-uri {:url "http://example.com"
+                       :query {:client_id (:client-id client-config-fixture)
+                               :redirect_uri (friend-oauth2/format-config-uri client-config-fixture)}}
+
+   :access-token-uri {:url "http://example.com"
                       :query {:client_id (client-config-fixture :client-id)
                               :client_secret (client-config-fixture :client-secret)
-                              :redirect_uri (friend-oauth2/format-config-url client-config-fixture)
+                              :redirect_uri (friend-oauth2/format-config-uri client-config-fixture)
                               :code ""}}})
+
+;; Default workflow function with above config
+(defn default-workflow-function [request-or-response]
+  ((friend-oauth2/workflow {:client-config client-config-fixture
+                           :uri-config uri-config-fixture})
+  request-or-response))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Stub for http post
+;; Stubs
 ;;
 
-(background
- (client/post {:url "" :form-params {}}) =>
- (fn [& anything] {}))
+(println (friend-oauth2/format-token-uri ((uri-config-fixture :access-token-uri) :query) "my-code"))
 
+(background
+ (client/post "http://example.com"
+              {:form-params 
+               (friend-oauth2/format-token-uri (uri-config-fixture :access-token-uri) "my-code")}) =>
+ (fn [& anything] access-token-response-fixture))
+
+(background
+ (ring.util.response/redirect (friend-oauth2/format-authorization-uri uri-config-fixture)) =>
+ (redirect-with-default-redirect-uri))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -42,16 +62,21 @@
 (defn redirect-request-fixture
   [redirect-uri]
   (ring-mock/content-type
-   (ring-mock/query-string
-              (ring-mock/request :get redirect-uri)
-              {:code "my-code"})
+   (ring-mock/request :get redirect-uri
+                      {:code "my-code"})
    "application/x-www-form-urlencoded"))
 
 (def default-redirect "/redirect")
 
-(defn redirect-with-default-redirect []
+(defn redirect-with-default-redirect-uri []
   (redirect-request-fixture default-redirect))
-  
+
+(defn query-string-to-params [request]
+  (assoc-in
+   request
+   [:query-params]
+   (codec/form-decode (request :query-string))))
+
 ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1
 (def access-token-response-fixture
   (ring.util.response/content-type
@@ -59,9 +84,19 @@
     "{\"access_token\": \"my-access-token\"}")
    "application/json"))
 
+;; Initial redirect to login
+(defn login-request
+  [login-path]
+  (ring-mock/request :get login-path))
+
+(def default-login-path "/login")
+
+(defn default-login-request []
+  (login-request default-login-path))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Facts
+;; Facts (helper functions)
 ;;
 
 (fact
@@ -71,7 +106,7 @@
 
 (fact
  "Extracts the code from the initial authorization request"
- (friend-oauth2/extract-code (redirect-with-default-redirect))
+ (friend-oauth2/extract-code (redirect-with-default-redirect-uri))
  => "my-code")
 
 (fact
@@ -80,19 +115,46 @@
  => nil)
 
 (fact
- "If there is a code in the request it posts to the token-url"
- ((friend-oauth2/workflow) redirect-with-default-redirect)
- (provided
-  (client/post {:url "" :form-params {}}) => 1 :times 1))
-
-(fact
- "Formats URL from domain and path pairs in a map"
- (friend-oauth2/format-config-url client-config-fixture)
+ "Formats URI from domain and path pairs in a map"
+ (friend-oauth2/format-config-uri client-config-fixture)
  => "http://127.0.0.1/redirect")
 
 (fact
- "Formats the token url with the authorization code"
- (get-in
-  (friend-oauth2/format-token-url (uri-config-fixture :access-token-uri) "my-code")
-  [:query :code])
+ "Formats the redirect uri"
+ (friend-oauth2/format-authorization-uri uri-config-fixture) =>
+ "http://example.com?client_id=my-client-id&redirect_uri=http%3A%2F%2F127.0.0.1%2Fredirect")
+  
+(fact
+ "Formats the token uri with the authorization code"
+ (((friend-oauth2/format-token-uri
+    (uri-config-fixture :access-token-uri) "my-code") :query) :code)
  => "my-code")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Facts (core workflow)
+;;
+
+(fact
+ "A login request redirects to the authorization uri"
+ (default-workflow-function (default-login-request))
+ => (redirect-with-default-redirect-uri))
+
+(future-fact
+ "extract-access-token is used for access-token-parsefn if none is passed in."
+ (default-workflow-function
+   (query-string-to-params (redirect-with-default-redirect-uri))) => {:identity nil, :access_token nil}
+   (provided
+    (friend-oauth2/extract-access-token) => 1 :times 1))
+
+;;(println (friend-oauth2/format-token-uri (uri-config-fixture :access-token-uri) "my-code"))
+
+(fact
+ "If there is a code in the request it posts to the token-uri"
+ (default-workflow-function
+   (query-string-to-params (redirect-with-default-redirect-uri))) => {:identity nil, :access_token nil}
+   (provided
+    (client/post) => 1 :times 1))
+     ;; ""
+     ;; {:form-params
+     ;;  ((friend-oauth2/format-token-uri (uri-config-fixture :access-token-uri) "my-code") :query)}) => 1 :times 1))
