@@ -11,11 +11,11 @@
    #(str %1 (get-in client-config [:callback %2]))
    "" [:domain :path]))
 
-(defn format-authorization-uri
-  "Formats the authorization uri"
-  [{:keys [authorization-uri]}]
-  (str (authorization-uri :url) "?"
-       (codec/form-encode (authorization-uri :query))))
+(defn format-authentication-uri
+  "Formats the client authentication uri"
+  [{:keys [authentication-uri]}]
+  (str (authentication-uri :url) "?"
+       (codec/form-encode (authentication-uri :query))))
 
 (defn replace-authorization-code
   "Formats the token uri with the authorization code"
@@ -38,46 +38,45 @@
     (j/parse-string (response :body)))
    :access_token))
 
+(defn make-auth
+  "Creates the auth-map for Friend"
+  [identity]
+  (with-meta identity
+    {:type ::friend/auth
+     ::friend/workflow :email-login
+     ::friend/redirect-on-auth? true}))
+  
 (defn workflow
   "Workflow for OAuth2"
   [config]
   (fn [request]
+    ;; If we have a callback for this workflow
+    ;; or a login URL in the request, process it.
     (if (or (= (:uri request)
                (:path (:callback (:client-config config))))
             (= (:uri request)
                (or (config :login-uri) "/login")))
 
-      ;; Step 2, 3:
-      ;; accept callback and get access_token (via POST)
+      ;; Steps 2 and 3:
+      ;; accept auth code callback, get access_token (via POST)
       (if-let [code (extract-code request)]
         (let [access-token-uri ((config :uri-config) :access-token-uri)
               token-url (assoc-in access-token-uri [:query]
                                   (replace-authorization-code access-token-uri code))
-
               ;; Step 4:
               ;; access_token response. Custom function for handling
-              ;; response body is passwed in via the :access-token-parsefn
+              ;; response body is pass in via the :access-token-parsefn
               access-token ((or (config :access-token-parsefn)
                                 extract-access-token)
                             (client/post
                              (:url token-url)
                              {:form-params (:query token-url)}))]
 
-          ;; Auth Map, as expected by Friend on a successful authentication:
-          (vary-meta
-           ;; Identity map
-           (merge
-            ;; At the least we will have the access-token,
-            ;; so we will use that for the identity (for now).
-            {:identity access-token
-             :access_token access-token}
-            (:config-auth config))  ;; config-auth is provider specific auth settings
-           ;; Meta-data
-           merge
-           {:type ::friend/auth}
-           {::friend/workflow :oauth2
-            ::friend/redirect-on-auth? true}))
+          ;; The auth map for a successful authentication:
+          (make-auth (merge {:identity access-token
+                             :access_token access-token}
+                            (:config-auth config))))
 
         ;; Step 1: redirect to OAuth2 provider.  Code will be in response.
         (ring.util.response/redirect
-         (format-authorization-uri (config :uri-config)))))))
+         (format-authentication-uri (config :uri-config)))))))

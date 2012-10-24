@@ -19,9 +19,9 @@
    :callback {:domain "http://127.0.0.1" :path "/redirect"}})
 
 (def uri-config-fixture
-  {:authorization-uri {:url "http://example.com"
-                       :query {:client_id (:client-id client-config-fixture)
-                               :redirect_uri (friend-oauth2/format-config-uri client-config-fixture)}}
+  {:authentication-uri {:url "http://example.com"
+                        :query {:client_id (:client-id client-config-fixture)
+                                :redirect_uri (friend-oauth2/format-config-uri client-config-fixture)}}
 
    :access-token-uri {:url "http://example.com"
                       :query {:client_id (client-config-fixture :client-id)
@@ -35,6 +35,8 @@
                            :uri-config uri-config-fixture})
   request-or-response))
 
+(def identity-fixture
+  {:identity "my-access-token", :access_token "my-access-token"})
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -116,14 +118,23 @@
  => "http://127.0.0.1/redirect")
 
 (fact
- "Formats the redirect uri"
- (friend-oauth2/format-authorization-uri uri-config-fixture)
+ "Formats the client authentication uri"
+ (friend-oauth2/format-authentication-uri uri-config-fixture)
  => "http://example.com?client_id=my-client-id&redirect_uri=http%3A%2F%2F127.0.0.1%2Fredirect")
 
 (fact
  "Replaces the authorization code"
  ((friend-oauth2/replace-authorization-code (uri-config-fixture :access-token-uri) "my-code") :code)
  => "my-code")
+
+(fact
+ "Creates the auth-map for Friend with proper meta-data"
+ (meta (friend-oauth2/make-auth identity-fixture))
+ =>
+ {:type ::friend/auth
+  ::friend/workflow :email-login
+  ::friend/redirect-on-auth? true})
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
