@@ -34,7 +34,7 @@ A brief description of the necessary configuration:
 
 5. `config-auth` ...TBD...
 
-## Changelog 0.1.0 -> 0.2.0
+## Changelog 0.0.1 -> 0.0.2
 
 * Added tests! Refactored!
 * A helper function has been added (`format-config-uri`) to configure the redirect url in the config.
