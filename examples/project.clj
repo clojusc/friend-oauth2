@@ -1,4 +1,4 @@
-(defproject friend-oauth2-examples "0.0.1"
+(defproject friend-oauth2-examples "0.0.2"
   :description "Friend Oauth2 Workflow examples, includes App.net, Facebook and Github handlers."
   :url "https://github.com/ddellacosta/friend-oauth2-examples"
   :license {:name "MIT License"
