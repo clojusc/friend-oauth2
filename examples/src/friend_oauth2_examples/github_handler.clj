@@ -13,32 +13,31 @@
 (declare render-repos-page)
 (declare get-github-repos)
 
-;; OAuth2 config
-(defn access-token-parsefn [body]
-  (clojure.walk/keywordize-keys
-  (reduce
-   #(merge %1 (clojure.string/split (str %2) #"="))
-   {} (clojure.string/split body #"&"))))
+(defn access-token-parsefn
+  [response]
+  ((clojure.walk/keywordize-keys
+    (ring.util.codec/form-decode
+      (response :body))) :access_token))
 
 (def config-auth {:roles #{::user}})
 
 (def client-config
   {:client-id ""
    :client-secret ""
-   :callback {:domain "http://localhost:3000" :path "/github.callback"}})
+   :callback {:domain "http://example.com" :path "/github.callback"}})
 
 (def uri-config
-  {:redirect-uri {:url "https://github.com/login/oauth/authorize"
-                  :query {:client_id (:client-id client-config)
-                          :response_type "code"
-                          :redirect_uri (str (:domain (:callback client-config)) (:path (:callback client-config)))
-                          :scope "user"}}
+  {:authentication-uri {:url "https://github.com/login/oauth/authorize"
+                        :query {:client_id (:client-id client-config)
+                                :response_type "code"
+                                :redirect_uri (oauth2/format-config-uri client-config)
+                                :scope "user"}}
 
    :access-token-uri {:url "https://github.com/login/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :grant_type "authorization_code"
-                              :redirect_uri (str (:domain (:callback client-config)) (:path (:callback client-config)))
+                              :redirect_uri (oauth2/format-config-uri client-config)
                               :code ""}}})
 
 (defroutes ring-app
@@ -84,4 +83,3 @@
         response (client/get url {:accept :json})
         repos (j/parse-string (:body response) true)]
     repos))
-

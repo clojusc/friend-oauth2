@@ -8,12 +8,6 @@
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
 
-;; OAuth2 config
-(defn access-token-parsefn [body]
-  (clojure.walk/keywordize-keys
-   (j/parse-string body)))
-
-;; TODO: add a more robust authorization scheme.
 (def config-auth {:roles #{::user}})
 
 (def client-config
@@ -23,17 +17,17 @@
 
 ;; TODO: add 'state' parameter for security.
 (def uri-config
-  {:redirect-uri {:url "https://alpha.app.net/oauth/authenticate"
-                  :query {:client_id (:client-id client-config)
-                          :response_type "code"
-                          :redirect_uri (oauth2/format-config-url client-config)
-                          :scope "stream,email"}}
+  {:authentication-uri {:url "https://alpha.app.net/oauth/authenticate"
+                       :query {:client_id (:client-id client-config)
+                               :response_type "code"
+                               :redirect_uri (oauth2/format-config-uri client-config)
+                               :scope "stream,email"}}
 
    :access-token-uri {:url "https://alpha.app.net/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :grant_type "authorization_code"
-                              :redirect_uri (oauth2/format-config-url client-config)
+                              :redirect_uri (oauth2/format-config-uri client-config)
                               :code ""}}})
 
 (defroutes ring-app
@@ -61,5 +55,4 @@
      :workflows [(oauth2/workflow
                   {:client-config client-config
                    :uri-config uri-config
-                   :access-token-parsefn access-token-parsefn
                    :config-auth config-auth})]})))

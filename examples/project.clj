@@ -6,11 +6,11 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [compojure "1.1.3"]
                  [com.cemerick/friend "0.1.0"]
-                 [friend-oauth2 "0.0.1"]
+                 [friend-oauth2 "0.0.2"]
                  [cheshire "4.0.2"]]
   :plugins [[lein-ring "0.7.5"]]
-  :ring {:handler friend-oauth2-examples.facebook-handler/app}
-;;  :ring {:handler friend-oauth2-examples.appdotnet-handler/app}
+  :ring {:handler friend-oauth2-examples.appdotnet-handler/app}
+;;  :ring {:handler friend-oauth2-examples.facebook-handler/app}
 ;;  :ring {:handler friend-oauth2-examples.github-handler/app}
   :profiles
   {:dev {:dependencies [[ring-mock "0.1.3"]]}})

@@ -8,13 +8,12 @@
                              [credentials :as creds])))
 
 ;; OAuth2 config
-(defn access-token-parsefn [body]
-  (clojure.walk/keywordize-keys
-  (reduce
-   #(merge %1 (clojure.string/split (str %2) #"="))
-   {} (clojure.string/split body #"&"))))
+(defn access-token-parsefn
+  [response]
+  ((clojure.walk/keywordize-keys
+    (ring.util.codec/form-decode
+      (response :body))) :access_token))
 
-;; TODO: add a more robust authorization scheme.
 (def config-auth {:roles #{::user}})
 
 (def client-config
@@ -22,17 +21,15 @@
    :client-secret ""
    :callback {:domain "http://example.com" :path "/facebook.callback"}})
 
-;; TODO: add 'state' parameter for security.
 (def uri-config
-  {:redirect-uri {:url "https://www.facebook.com/dialog/oauth"
-                  :query {:client_id (:client-id client-config)
-                          :redirect_uri
-                          (str (:domain (:callback client-config)) (:path (:callback client-config)))}}
+  {:authentication-uri {:url "https://www.facebook.com/dialog/oauth"
+                        :query {:client_id (:client-id client-config)
+                                :redirect_uri (oauth2/format-config-uri client-config)}}
 
    :access-token-uri {:url "https://graph.facebook.com/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
-                              :redirect_uri (str (:domain (:callback client-config)) (:path (:callback client-config)))
+                              :redirect_uri (oauth2/format-config-uri client-config)
                               :code ""}}})
 
 (defroutes ring-app
