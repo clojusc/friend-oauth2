@@ -1,6 +1,6 @@
 # friend-oauth2-examples
 
-Use friend-oauth2 version 0.0.2.
+Use friend-oauth2 version 0.0.3.
 
 Includes [Facebook (server-side authentication)](https://developers.facebook.com/docs/authentication/server-side/), [App.net](https://github.com/appdotnet/api-spec/blob/master/auth.md) and [Github](http://developer.github.com/v3/oauth/) examples using [Friend-OAuth2](https://github.com/ddellacosta/friend-oauth2), an OAuth2 workflow for [Friend](https://github.com/cemerick/friend).
 
