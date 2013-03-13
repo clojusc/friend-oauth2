@@ -7,7 +7,7 @@ friend-oauth2 is an oauth2 workflow for Chas Emerick's [Friend][1] library.
 ## Installation
 
 ```clojure
-[friend-oauth2 "0.0.2"]
+[friend-oauth2 "0.0.3"]
 ```
 
 Obviously requires [Friend][1].
@@ -33,6 +33,10 @@ A brief description of the necessary configuration:
 4. `access-token-parsefn` is a provider-specific function which parses the access_token response and returns just the access_token. If your OAuth2 provider does not follow the RFC (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1) then you can pass in a custom function to parse the access-token response.  See the [Facebook and Github examples][2] for reference.
 
 5. `config-auth` ...TBD...
+
+## Changelog 0.0.2 -> 0.0.3
+
+* Nothing much, just updated versions of dependencies, and ensured tests are still passing.
 
 ## Changelog 0.0.1 -> 0.0.2
 
