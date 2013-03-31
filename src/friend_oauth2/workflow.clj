@@ -1,7 +1,7 @@
 (ns friend-oauth2.workflow
   (:require [cemerick.friend :as friend]
             [clj-http.client :as client]
-            [ring.util.codec :as codec]
+            [ring.util.codec :as ring-codec]
             [ring.util.request :as ring-request]
             [cheshire.core :as j]))
 
@@ -16,7 +16,7 @@
   "Formats the client authentication uri"
   [{:keys [authentication-uri]}]
   (str (authentication-uri :url) "?"
-       (codec/form-encode (authentication-uri :query))))
+       (ring-codec/form-encode (authentication-uri :query))))
 
 (defn replace-authorization-code
   "Formats the token uri with the authorization code"
@@ -43,12 +43,13 @@
   "Workflow for OAuth2"
   [config]
   (fn [request]
+
     ;; If we have a callback for this workflow
     ;; or a login URL in the request, process it.
     (if (or (= (ring-request/path-info request)
                (-> config :client-config :callback :path))
             (= (ring-request/path-info request)
-               (config :login-uri)))
+               (or (:login-uri config) (:login-uri (::friend/auth-config request)))))
 
       ;; Steps 2 and 3:
       ;; accept auth code callback, get access_token (via POST)
