@@ -48,8 +48,7 @@
     ;; or a login URL in the request, process it.
     (if (or (= (:uri request)
                (:path (:callback (:client-config config))))
-            (= (:uri request)
-               (or (config :login-uri) "/login")))
+            (= (:uri request) (config :login-uri)))
 
       ;; Steps 2 and 3:
       ;; accept auth code callback, get access_token (via POST)
