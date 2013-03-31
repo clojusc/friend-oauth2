@@ -3,6 +3,8 @@
   (:require [friend-oauth2.workflow :as friend-oauth2]
             [cemerick.friend :as friend]
             [clj-http.client :as client]
+            [ring.middleware.params :as ring-params]
+            [ring.middleware.keyword-params :as ring-keyword-params]
             [ring.mock.request :as ring-mock]
             [ring.util.codec :as codec]
             [cheshire.core :as j]))
@@ -46,10 +48,12 @@
 ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.2
 (defn redirect-request-fixture
   [redirect-uri]
-  (ring-mock/content-type
-   (ring-mock/request :get redirect-uri
-                      {:code "my-code"})
-   "application/x-www-form-urlencoded"))
+  (ring-keyword-params/keyword-params-request
+   (ring-params/params-request
+    (ring-mock/content-type
+     (ring-mock/request :get redirect-uri
+                        {:code "my-code"})
+     "application/x-www-form-urlencoded"))))
 
 (def default-redirect "/redirect")
 
@@ -103,13 +107,11 @@
  => "my-access-token")
 
 (fact
- "Extracts the code from the initial authorization request"
- (friend-oauth2/extract-code (redirect-with-default-redirect-uri))
- => "my-code")
-
-(fact
  "Returns nil if there is no code in the request"
- (friend-oauth2/extract-code (ring-mock/request :get default-redirect))
+ ;; No longer necessary since ring params/keyword-params handles this for us.
+ ;; Not sure if this test is necessary anymore either, but leaving in for now.
+ ;; (friend-oauth2/extract-code (ring-mock/request :get default-redirect))
+ (-> (ring-mock/request :get default-redirect) :params :code)
  => nil)
 
 (fact
@@ -150,7 +152,7 @@
 (fact
  "extract-access-token is used for access-token-parsefn if none is passed in."
  (default-workflow-function
-   (query-string-to-params (redirect-with-default-redirect-uri)))
+   (redirect-with-default-redirect-uri))
  => {:identity "my-access-token", :access_token "my-access-token"}
  (provided
   (friend-oauth2/extract-access-token access-token-response-fixture)
@@ -159,7 +161,7 @@
 (fact
  "If there is a code in the request it posts to the token-uri"
  (default-workflow-function
-   (query-string-to-params (redirect-with-default-redirect-uri)))
+   (redirect-with-default-redirect-uri))
  => {:identity "my-access-token", :access_token "my-access-token"}
  (provided
   (client/post "http://example.com"

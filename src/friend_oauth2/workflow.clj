@@ -22,13 +22,7 @@
   [uri-config code]
   (assoc-in (uri-config :query) [:code] code))
 
-;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.2
-(defn extract-code
-  "Returns the authentication code from a request query-string"
-  [request]
-  (if-let [query-string (request :query-string)]
-    ((codec/form-decode query-string) "code")
-    nil))
+
 
 ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1
 (defn extract-access-token
@@ -59,7 +53,9 @@
 
       ;; Steps 2 and 3:
       ;; accept auth code callback, get access_token (via POST)
-      (if-let [code (extract-code request)]
+
+      ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.2
+      (if-let [code (-> request :params :code)]
         (let [access-token-uri ((config :uri-config) :access-token-uri)
               token-url (assoc-in access-token-uri [:query]
                                   (replace-authorization-code access-token-uri code))

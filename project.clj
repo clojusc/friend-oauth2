@@ -13,4 +13,5 @@
             [codox "0.6.4"]]
   :profiles
   {:dev {:dependencies [[ring-mock "0.1.3"]
+                        [ring "1.2.0-beta2"]
                         [midje "1.5.0"]]}})
