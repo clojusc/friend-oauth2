@@ -2,6 +2,7 @@
   (:require [cemerick.friend :as friend]
             [clj-http.client :as client]
             [ring.util.codec :as codec]
+            [ring.util.request :as ring-request]
             [cheshire.core :as j]))
 
 (defn format-config-uri
@@ -21,8 +22,6 @@
   "Formats the token uri with the authorization code"
   [uri-config code]
   (assoc-in (uri-config :query) [:code] code))
-
-
 
 ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1
 (defn extract-access-token
@@ -46,9 +45,10 @@
   (fn [request]
     ;; If we have a callback for this workflow
     ;; or a login URL in the request, process it.
-    (if (or (= (:uri request)
-               (:path (:callback (:client-config config))))
-            (= (:uri request) (config :login-uri)))
+    (if (or (= (ring-request/path-info request)
+               (-> config :client-config :callback :path))
+            (= (ring-request/path-info request)
+               (config :login-uri)))
 
       ;; Steps 2 and 3:
       ;; accept auth code callback, get access_token (via POST)
