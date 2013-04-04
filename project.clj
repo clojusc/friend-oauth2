@@ -8,10 +8,12 @@
                  [ring "1.2.0-beta2"]
                  [ring/ring-codec "1.0.0"]
                  [clj-http "0.6.5" :exclusions [org.apache.httpcomponents/httpclient slingshot]]
-                 [cheshire "5.0.2"]]
+                 [cheshire "5.0.2"]
+                 [crypto-random "1.1.0"]]
   :plugins [[lein-ring "0.8.3"]
             [lein-midje "3.0.0"]
             [codox "0.6.4"]]
   :profiles
   {:dev {:dependencies [[ring-mock "0.1.3"]
-                        [midje "1.5.0" :exclusions [org.clojure/core.incubator joda-time]]]}})
+                        [midje "1.5.0" :exclusions [org.clojure/core.incubator joda-time]]
+                        [com.cemerick/url "0.0.7" :exclusions [org.clojure/core.incubator]]]}})

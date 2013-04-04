@@ -2,6 +2,7 @@
   (:use midje.sweet)
   (:require [friend-oauth2.workflow :as friend-oauth2]
             [cemerick.friend :as friend]
+            [cemerick.url :as url]
             [clj-http.client :as client]
             [ring.middleware.params :as ring-params]
             [ring.middleware.keyword-params :as ring-keyword-params]
@@ -21,11 +22,11 @@
    :callback {:domain "http://127.0.0.1" :path "/redirect"}})
 
 (def uri-config-fixture
-  {:authentication-uri {:url "http://example.com"
+  {:authentication-uri {:url "http://example.com/authenticate"
                         :query {:client_id (:client-id client-config-fixture)
                                 :redirect_uri (friend-oauth2/format-config-uri client-config-fixture)}}
 
-   :access-token-uri {:url "http://example.com"
+   :access-token-uri {:url "http://example.com/get-access-token"
                       :query {:client_id (client-config-fixture :client-id)
                               :client_secret (client-config-fixture :client-secret)
                               :redirect_uri (friend-oauth2/format-config-uri client-config-fixture)
@@ -53,7 +54,7 @@
    (ring-params/params-request
     (ring-mock/content-type
      (ring-mock/request :get redirect-uri
-                        {:code "my-code"})
+                        {:code "my-code" :state "some-state"})
      "application/x-www-form-urlencoded"))))
 
 (def default-redirect "/redirect")
@@ -91,11 +92,24 @@
 
 (background
  (client/post
-  "http://example.com"
-  {:form-params {:client_id "my-client-id", :client_secret "my-client-secret", :redirect_uri "http://127.0.0.1/redirect", :code "my-code"}})
- => access-token-response-fixture,
- (ring.util.response/redirect anything)
- => (redirect-with-default-redirect-uri))
+  "http://example.com/authenticate"
+  {:form-params
+   {:client_id     "my-client-id"
+    :response_type "code"
+    :redirect_uri  "http://127.0.0.1/redirect"
+    :scope         anything
+    :state         anything}})
+ => access-token-response-fixture
+
+ (client/post
+  "http://example.com/get-access-token"
+  {:form-params
+   {:client_id     "my-client-id"
+    :client_secret "my-client-secret"
+    :grant_type    "authorization_code"
+    :redirect_uri  "http://127.0.0.1/redirect"
+    :code          "my-code"}})
+ => access-token-response-fixture)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -122,8 +136,8 @@
 
 (fact
  "Formats the client authentication uri"
- (friend-oauth2/format-authentication-uri uri-config-fixture)
- => "http://example.com?client_id=my-client-id&redirect_uri=http%3A%2F%2F127.0.0.1%2Fredirect")
+ (friend-oauth2/format-authentication-uri uri-config-fixture "anti-forgery-token")
+ => "http://example.com/authenticate?redirect_uri=http%3A%2F%2F127.0.0.1%2Fredirect&client_id=my-client-id&state=anti-forgery-token")
 
 (fact
  "Replaces the authorization code"
@@ -147,14 +161,22 @@
 
 (fact
  "A login request redirects to the authorization uri"
- (default-workflow-function (default-login-request))
- => (redirect-with-default-redirect-uri))
+ (let [auth-redirect (default-workflow-function (default-login-request))
+       status (:status auth-redirect)
+       ;; Isn't there something in Ring that will do all this for me?
+       location (get (:headers auth-redirect) "Location")
+       redirect-query (-> location url/url :query clojure.walk/keywordize-keys)]
+
+   status                               => 302
+   (:redirect_uri redirect-query)       => "http://127.0.0.1/redirect"
+   (:client_id redirect-query)          => "my-client-id"
+   (not (nil? (:state redirect-query))) => true))
 
 (fact
  "extract-access-token is used for access-token-parsefn if none is passed in."
  (default-workflow-function
    (redirect-with-default-redirect-uri))
- => {:identity "my-access-token", :access_token "my-access-token"}
+ => {:identity "my-access-token" :access_token "my-access-token"}
  (provided
   (friend-oauth2/extract-access-token access-token-response-fixture)
   => "my-access-token" :times 1))
@@ -163,9 +185,24 @@
  "If there is a code in the request it posts to the token-uri"
  (default-workflow-function
    (redirect-with-default-redirect-uri))
- => {:identity "my-access-token", :access_token "my-access-token"}
+ => {:identity "my-access-token" :access_token "my-access-token"}
  (provided
-  (client/post "http://example.com"
-               {:form-params (friend-oauth2/replace-authorization-code
-                              (uri-config-fixture :access-token-uri) "my-code")})
+  (client/post "http://example.com/get-access-token"
+               {:form-params
+                (merge {:grant_type "authorization_code"}
+                       (friend-oauth2/replace-authorization-code
+                        (uri-config-fixture :access-token-uri) "my-code"))})
   => access-token-response-fixture :times 1))
+
+(fact
+ "A CSRF token is passed by default"
+ (let [auth-redirect (default-workflow-function (default-login-request))
+       location (get (:headers auth-redirect) "Location")
+       redirect-query (-> location url/url :query clojure.walk/keywordize-keys)]
+
+   (not (nil? (:state redirect-query))) => true))
+
+(future-fact
+ "If the session state is not the same as the auth-response state, it does not proceed"
+ {(keyword (generate-anti-forgery-token)) "state"
+  :some-other-var "something"})
