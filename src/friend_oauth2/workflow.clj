@@ -25,7 +25,7 @@
 (defn replace-authorization-code
   "Formats the token uri with the authorization code"
   [uri-config code]
-  (assoc-in (uri-config :query) [:code] code))
+  (assoc-in (:query uri-config) [:code] code))
 
 ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1
 (defn extract-access-token
@@ -90,7 +90,7 @@
 
                 ;; Step 4:
                 ;; access_token response. Custom function for handling
-                ;; response body is pass in via the :access-token-parsefn
+                ;; response body is passed in via the :access-token-parsefn
 
                 access-token ((or (:access-token-parsefn config)
                                   extract-access-token)
@@ -102,9 +102,10 @@
                               (:config-auth config))))
 
           ;; Step 1: redirect to OAuth2 provider.  Code will be in response.
-          (let [anti-forgery-token (generate-anti-forgery-token)]
+          (let [anti-forgery-token    (generate-anti-forgery-token)
+                session-with-af-token (assoc (:session request)
+                                        (keyword anti-forgery-token) "state")]
             (assoc
                 (ring.util.response/redirect
                  (format-authentication-uri (:uri-config config) anti-forgery-token))
-              :session (assoc (:session request) (keyword anti-forgery-token) "state"))
-            ))))))
+              :session session-with-af-token)))))))
