@@ -17,13 +17,13 @@
 
 ;; TODO: add 'state' parameter for security.
 (def uri-config
-  {:authentication-uri {:url "https://alpha.app.net/oauth/authenticate"
+  {:authentication-uri {:url "https://account.app.net/oauth/authenticate"
                        :query {:client_id (:client-id client-config)
                                :response_type "code"
                                :redirect_uri (oauth2/format-config-uri client-config)
                                :scope "stream,email"}}
 
-   :access-token-uri {:url "https://alpha.app.net/oauth/access_token"
+   :access-token-uri {:url "https://account.app.net/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :grant_type "authorization_code"
