@@ -1,4 +1,4 @@
-(defproject friend-oauth2 "0.0.3"
+(defproject friend-oauth2 "0.0.4"
   :description "OAuth2 workflow for Friend (https://github.com/cemerick/friend). (Bug reports/contributions welcome!)"
   :url "https://github.com/ddellacosta/friend-oauth2"
   :license {:name "MIT License"
@@ -6,7 +6,7 @@
 
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [com.cemerick/friend "0.1.5" :exclusions [ring/ring-core slingshot]]
-                 [ring "1.2.0-beta2"]
+                 [ring "1.2.0-beta3"]
                  [ring/ring-codec "1.0.0"]
                  [clj-http "0.6.5" :exclusions [org.apache.httpcomponents/httpclient slingshot]]
                  [cheshire "5.0.2"]
