@@ -28,7 +28,6 @@
         cookie-vars (mapcat
                      #(clojure.string/split % #"=")
                      (clojure.string/split cookie #";"))]
-    ;;(println cookie " | " cookie2 "\n")
     (get (apply hash-map cookie-vars) "ring-session")))
 
 (defn make-cookie-request
