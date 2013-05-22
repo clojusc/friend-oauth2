@@ -13,11 +13,14 @@
 (declare render-repos-page)
 (declare get-github-repos)
 
+;; OAuth2 config
 (defn access-token-parsefn
   [response]
-  ((clojure.walk/keywordize-keys
-    (ring.util.codec/form-decode
-      (response :body))) :access_token))
+  (-> response
+      :body
+      ring.util.codec/form-decode
+      clojure.walk/keywordize-keys
+      :access_token))
 
 (def config-auth {:roles #{::user}})
 
