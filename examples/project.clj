@@ -16,6 +16,7 @@
   :plugins [[lein-ring "0.8.5"]]
 
   :ring {:handler friend-oauth2-examples.appdotnet-handler/app}
+;;  :ring {:handler friend-oauth2-examples.google-handler/app}
 ;;  :ring {:handler friend-oauth2-examples.facebook-handler/app}
 ;;  :ring {:handler friend-oauth2-examples.github-handler/app}
 

@@ -2,7 +2,7 @@
 
 Use friend-oauth2 version 0.0.4.
 
-Includes [Facebook (server-side authentication)](https://developers.facebook.com/docs/authentication/server-side/), [App.net](https://github.com/appdotnet/api-spec/blob/master/auth.md) and [Github](http://developer.github.com/v3/oauth/) examples using [Friend-OAuth2](https://github.com/ddellacosta/friend-oauth2), an OAuth2 workflow for [Friend](https://github.com/cemerick/friend).
+Includes [Google OAuth 2.0 Login](https://developers.google.com/accounts/docs/OAuth2Login), [Facebook (server-side authentication)](https://developers.facebook.com/docs/authentication/server-side/), [App.net](https://github.com/appdotnet/api-spec/blob/master/auth.md) and [Github](http://developer.github.com/v3/oauth/) examples using [friend-oauth2](https://github.com/ddellacosta/friend-oauth2), an OAuth2 workflow for [Friend](https://github.com/cemerick/friend).
 
 ## Running
 
@@ -10,6 +10,7 @@ Tweak the project.clj file if the handler you want to try is commented out.
 
 ```clojure
   :ring {:handler friend-oauth2-examples.facebook-handler/app}
+;;  :ring {:handler friend-oauth2-examples.google-handler/app}
 ;;  :ring {:handler friend-oauth2-examples.appdotnet-handler/app}
 ;;  :ring {:handler friend-oauth2-examples.github-handler/app}
 ```
