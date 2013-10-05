@@ -32,7 +32,7 @@
   "Alternate function to allow retrieve
    access_token when passed in as form params."
   [{body :body}]
-  (get (ring.util.codec/form-decode body) "access_token"))
+  (-> body ring.util.codec/form-decode (get "access_token")))
 
 (defn extract-anti-forgery-token
   "Extracts the anti-csrf state key from the response"
