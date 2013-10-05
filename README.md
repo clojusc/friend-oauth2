@@ -32,7 +32,7 @@ A brief description of the necessary configuration:
 
 4. `access-token-parsefn` is a provider-specific function which parses the access_token response and returns just the access_token. If your OAuth2 provider does not follow the RFC (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1, ("in the entity body of the HTTP response using the "application/json" media type as defined by [RFC4627]") then you can pass in a custom function to parse the access_token response.
 
-Note that there is an alternate function (`get-access-token-from-params`) supplied to handle the common case where an access_token is provided as parameters in the callback request. Simply set the `:access-token-parsefn get-access-token-from-params`   See the [Facebook and Github examples][2] for reference.
+    Note that there is an alternate function (`get-access-token-from-params`) supplied to handle the common case where an access_token is provided as parameters in the callback request. Simply set the `:access-token-parsefn get-access-token-from-params`   See the [Facebook and Github examples][2] for reference.
 
 5. Because OAuth2 is technically a protocol for obtaining 3rd-party **authorization** of resources, `credential-fn` behaves differently than in other workflows: it allows you to intercept the access-token at the end of the 3rd-party authentication process and inject your own functionality.  This is where you would do something like associate the 3rd-party's authorization with a user or roles in your own system, for example.
 
