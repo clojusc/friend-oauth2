@@ -53,7 +53,6 @@
         (if (and (not (nil? code))
                  (= state session-state))
           (when-let [access-token (request-token config code)]
-;;            (if-let [cred-fn (:credential-fn config)] (cred-fn access-token)) ; do something
             (make-auth (merge {:identity access-token
                                :access_token access-token}
                               (:config-auth config))))

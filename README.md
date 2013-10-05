@@ -7,7 +7,7 @@ friend-oauth2 is an oauth2 workflow for [Friend][1].
 ## Installation
 
 ```clojure
-[friend-oauth2 "0.0.4"]
+[friend-oauth2 "0.1.0"]
 ```
 
 Obviously requires [Friend][1].
@@ -30,17 +30,16 @@ A brief description of the necessary configuration:
 
 3. The `access-token-uri` map holds the provider-specific configuration for the access_token request, after the code is returned from the previous redirect (a server-to-server POST request).
 
-4. `access-token-parsefn` is a provider-specific function which parses the access_token response and returns just the access_token. If your OAuth2 provider does not follow the RFC (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1) then you can pass in a custom function to parse the access-token response.  See the [Facebook and Github examples][2] for reference.
+4. `access-token-parsefn` is a provider-specific function which parses the access_token response and returns just the access_token. If your OAuth2 provider does not follow the RFC (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1, ("in the entity body of the HTTP response using the "application/json" media type as defined by [RFC4627]") then you can pass in a custom function to parse the access_token response.
 
-5. `config-auth` ...TBD...
+Note that there is an alternate function (`get-access-token-from-params`) supplied to handle the common case where an access_token is provided as parameters in the callback request. Simply set the `:access-token-parsefn get-access-token-from-params`   See the [Facebook and Github examples][2] for reference.
+
+5. Because OAuth2 is technically a protocol for obtaining 3rd-party **authorization** of resources, `credential-fn` behaves differently than in other workflows: it allows you to intercept the access-token at the end of the 3rd-party authentication process and inject your own functionality.  This is where you would do something like associate the 3rd-party's authorization with a user or roles in your own system, for example.
 
 
 ## To-do:
 
-* Handle exceptions/errors after redirect and access_token request.
-* auth-map: should we be using the access-token as identity?  Are there any downsides to this, especially in terms of security?
 * Move client_id/client_secret to Authorization header (necessary? Good for security or immaterial? Does FB support this?) (http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-2.3)
-* What's that thing I'm getting on the end of my url when I log in via FB ("#_=_")? Fix.
 
 ## License
 

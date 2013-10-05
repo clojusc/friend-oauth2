@@ -6,11 +6,17 @@
    [friend-oauth2.util :as oauth2-util]
    [friend-oauth2.workflow :as oauth2]
    [cemerick.url :as url]
-   [ring.mock.request :as ring-mock]))
+   [ring.mock.request :as ring-mock]
+   [ring.util.response :refer [response]]))
 
 (fact
  "Extracts the access token from a JSON access token response"
  (oauth2-util/extract-access-token access-token-response-fixture)
+ => "my-access-token")
+
+(fact
+ "Extracts the access token from out-of-spec params"
+ (oauth2-util/get-access-token-from-params (response "access_token=my-access-token"))
  => "my-access-token")
 
 (fact
