@@ -4,17 +4,9 @@
             [compojure.route :as route]
             [cemerick.friend :as friend]
             [friend-oauth2.workflow :as oauth2]
+            [friend-oauth2.util :refer [format-config-uri get-access-token-from-params]]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
-
-;; OAuth2 config
-(defn access-token-parsefn
-  [response]
-  (-> response
-      :body
-      ring.util.codec/form-decode
-      clojure.walk/keywordize-keys
-      :access_token))
 
 (def config-auth {:roles #{::user}})
 
@@ -26,13 +18,12 @@
 (def uri-config
   {:authentication-uri {:url "https://www.facebook.com/dialog/oauth"
                         :query {:client_id (:client-id client-config)
-                                :redirect_uri (oauth2/format-config-uri client-config)}}
+                                :redirect_uri (format-config-uri client-config)}}
 
    :access-token-uri {:url "https://graph.facebook.com/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
-                              :redirect_uri (oauth2/format-config-uri client-config)
-                              :code ""}}})
+                              :redirect_uri (format-config-uri client-config)}}})
 
 (defroutes ring-app
   (GET "/" request "open.")
@@ -59,5 +50,5 @@
      :workflows [(oauth2/workflow
                   {:client-config client-config
                    :uri-config uri-config
-                   :access-token-parsefn access-token-parsefn
+                   :access-token-parsefn get-access-token-from-params
                    :config-auth config-auth})]})))

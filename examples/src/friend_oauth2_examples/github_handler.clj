@@ -5,6 +5,7 @@
             [cemerick.friend :as friend]
             [clj-http.client :as client]
             [friend-oauth2.workflow :as oauth2]
+            [friend-oauth2.util :refer [format-config-uri get-access-token-from-params]]
             [cheshire.core :as j]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
@@ -12,15 +13,6 @@
 (declare render-status-page)
 (declare render-repos-page)
 (declare get-github-repos)
-
-;; OAuth2 config
-(defn access-token-parsefn
-  [response]
-  (-> response
-      :body
-      ring.util.codec/form-decode
-      clojure.walk/keywordize-keys
-      :access_token))
 
 (def config-auth {:roles #{::user}})
 
@@ -33,15 +25,14 @@
   {:authentication-uri {:url "https://github.com/login/oauth/authorize"
                         :query {:client_id (:client-id client-config)
                                 :response_type "code"
-                                :redirect_uri (oauth2/format-config-uri client-config)
+                                :redirect_uri (format-config-uri client-config)
                                 :scope "user"}}
 
    :access-token-uri {:url "https://github.com/login/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :grant_type "authorization_code"
-                              :redirect_uri (oauth2/format-config-uri client-config)
-                              :code ""}}})
+                              :redirect_uri (format-config-uri client-config)}}})
 
 (defroutes ring-app
   (GET "/" request "<a href=\"/repos\">My Github Repositories</a><br><a href=\"/status\">Status</a>")
@@ -59,7 +50,7 @@
      :workflows [(oauth2/workflow
                   {:client-config client-config
                    :uri-config uri-config
-                   :access-token-parsefn access-token-parsefn
+                   :access-token-parsefn get-access-token-from-params
                    :config-auth config-auth})]})))
 
 (defn render-status-page [request]

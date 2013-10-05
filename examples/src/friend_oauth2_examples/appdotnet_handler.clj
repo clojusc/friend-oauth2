@@ -4,6 +4,7 @@
             [compojure.route :as route]
             [cemerick.friend :as friend]
             [friend-oauth2.workflow :as oauth2]
+            [friend-oauth2.util :refer [format-config-uri]]
             [cheshire.core :as j]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
@@ -15,20 +16,18 @@
    :client-secret ""
    :callback {:domain "http://example.com" :path "/app.net.callback"}})
 
-;; TODO: add 'state' parameter for security.
 (def uri-config
   {:authentication-uri {:url "https://account.app.net/oauth/authenticate"
                        :query {:client_id (:client-id client-config)
                                :response_type "code"
-                               :redirect_uri (oauth2/format-config-uri client-config)
+                               :redirect_uri (format-config-uri client-config)
                                :scope "stream,email"}}
 
    :access-token-uri {:url "https://account.app.net/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :grant_type "authorization_code"
-                              :redirect_uri (oauth2/format-config-uri client-config)
-                              :code ""}}})
+                              :redirect_uri (format-config-uri client-config)}}})
 
 (defroutes ring-app
   (GET "/" request "open.")

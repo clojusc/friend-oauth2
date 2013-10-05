@@ -1,24 +1,29 @@
-(defproject friend-oauth2-examples "0.0.3"
-  :description "Friend Oauth2 Workflow examples, includes App.net, Facebook and Github handlers."
+(defproject friend-oauth2-examples "0.0.4"
+  :description "Friend Oauth2 Workflow examples, includes App.net, Facebook, Github and Google handlers."
 
   :url "https://github.com/ddellacosta/friend-oauth2-examples"
 
   :license {:name "MIT License"
             :url "http://dd.mit-license.org"}
 
-  :dependencies [[org.clojure/clojure "1.4.0"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.1.5" :exclusions [ring/ring-core org.clojure/core.incubator]]
-                 [com.cemerick/friend "0.1.5" :exclusions [ring/ring-core]]
-                 [friend-oauth2 "0.0.4" :exclusions [org.apache.httpcomponents/httpcore]]
-                 [cheshire "5.0.2"]
-                 [ring-server "0.2.8" :exclusions [ring]]]
+                 [com.cemerick/friend "0.2.0" :exclusions [ring/ring-core]]
+                 [friend-oauth2 "0.1.0" :exclusions [org.apache.httpcomponents/httpcore]]
+                 [cheshire "5.2.0"]
+                 [ring-server "0.3.0" :exclusions [ring]]]
 
-  :plugins [[lein-ring "0.8.5"]]
+  :profiles {:dev       {:plugins [[lein-ring "0.8.5" :exclusions [org.clojure/clojure]]]}
+             :appdotnet {:ring {:handler friend-oauth2-examples.appdotnet-handler/app}}
+             :facebook  {:ring {:handler friend-oauth2-examples.facebook-handler/app}}
+             :github    {:ring {:handler friend-oauth2-examples.github-handler/app}}
+             :google    {:ring {:handler friend-oauth2-examples.google-handler/app}}}
 
-  :ring {:handler friend-oauth2-examples.appdotnet-handler/app}
-;;  :ring {:handler friend-oauth2-examples.google-handler/app}
-;;  :ring {:handler friend-oauth2-examples.facebook-handler/app}
-;;  :ring {:handler friend-oauth2-examples.github-handler/app}
-
-  :profiles {:dev
-             {:dependencies [[ring-mock "0.1.3"]]}})
+  :aliases  {"facebook"  ["with-profile" "dev,facebook"
+                          "do" "ring" "server-headless"]
+             "appdotnet" ["with-profile" "dev,appdotnet"
+                          "do" "ring" "server-headless"]
+             "github"    ["with-profile" "dev,github"
+                          "do" "ring" "server-headless"]
+             "google"    ["with-profile" "dev,google"
+                          "do" "ring" "server-headless"]})
