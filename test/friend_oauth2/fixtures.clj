@@ -1,6 +1,7 @@
 (ns friend-oauth2.fixtures
   (:require
-   [friend-oauth2.workflow :as friend-oauth2]))
+   [ring.util.response :refer [response content-type]]
+   [friend-oauth2.util :as oauth2-util]))
 
 (def client-config-fixture
   {:client-id "my-client-id"
@@ -10,20 +11,19 @@
 (def uri-config-fixture
   {:authentication-uri {:url "http://example.com/authenticate"
                         :query {:client_id (:client-id client-config-fixture)
-                                :redirect_uri (friend-oauth2/format-config-uri client-config-fixture)}}
+                                :redirect_uri (oauth2-util/format-config-uri client-config-fixture)}}
 
    :access-token-uri {:url "http://example.com/get-access-token"
                       :query {:client_id (client-config-fixture :client-id)
                               :client_secret (client-config-fixture :client-secret)
-                              :redirect_uri (friend-oauth2/format-config-uri client-config-fixture)
-                              :code ""}}})
+                              :redirect_uri (oauth2-util/format-config-uri client-config-fixture)}}})
 
 ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-5.1
 (def access-token-response-fixture
-  (ring.util.response/content-type
-   (ring.util.response/response
-    "{\"access_token\": \"my-access-token\"}")
-   "application/json"))
+  (-> "{\"access_token\": \"my-access-token\"}"
+      response
+      (content-type "application/json")))
 
 (def identity-fixture
-  {:identity "my-access-token", :access_token "my-access-token"})
+  {:identity "my-access-token"
+   :access_token "my-access-token"})

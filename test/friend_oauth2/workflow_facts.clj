@@ -4,63 +4,68 @@
    friend-oauth2.test-helpers
    friend-oauth2.fixtures)
   (:require
+   [friend-oauth2.workflow :as oauth2]
+   [cemerick.friend :as friend]
    [cemerick.url :as url]
+   [ring.util.response :refer [get-header]]
    [ring.mock.request :as ring-mock]))
+
+(fact
+ "Creates the auth-map for Friend with proper meta-data"
+ (meta (oauth2/make-auth identity-fixture))
+ =>
+ {:type ::friend/auth
+  ::friend/workflow :email-login
+  ::friend/redirect-on-auth? true})
 
 (fact
  "A user can authenticate via OAuth2
  (tests 'happy path' for the whole process)."
 
- (let [authlink-response  (test-app (ring-mock/request :get "/authlink"))
-       ring-session-val   (extract-ring-session-val authlink-response)
+ (with-redefs [clj-http.client/post (constantly access-token-response-fixture)]
+   (let [authlink-response  (test-app (ring-mock/request :get "/authlink"))
+         ring-session-val   (extract-ring-session-val authlink-response)
 
-       login-response     (make-ring-session-get-request
-                           "/login" {} ring-session-val)
-       state              (extract-state-from-redirect-url login-response)
+         login-response     (make-session-get-request "/login" {} ring-session-val)
+         state              (extract-state-from-redirect-url login-response)
 
-       ;; refactor to use cemerick.url?
-       authentication-url (str
-                           "http://example.com/authenticate?redirect_uri=http%3A%2F%2F127.0.0.1%2Fredirect&client_id=my-client-id&state="
-                           (clojure.string/replace state #"\+" "%2B"))
+         authlink-redirect  (make-session-get-request
+                             "/redirect" {:code "my-code" :state state} ring-session-val)
+         authlink           (get-header authlink-redirect "Location")
+         authed-response    (make-session-get-request authlink {} ring-session-val)]
 
-       authlink-redirect  (make-ring-session-get-request
-                           "/redirect"
-                           {:code "my-code" :state state}
-                           ring-session-val)
-       authlink           (extract-location authlink-redirect)
+     (:status authlink-response)                                   => 302
+     (re-find #"/login" (get-header authlink-response "Location")) => "/login"
 
-       authed-response    (make-ring-session-get-request
-                           authlink {} ring-session-val)]
+     (:status login-response)                                      => 302
+     (re-find #"/authenticate"
+              (get-header login-response "Location"))              => "/authenticate"
 
-   (:status authlink-response)          => 302
-   (extract-location authlink-response) => "http://localhost/login"
+     (:status authlink-redirect)                                   => 303
+     (re-find #"/authlink"
+              (get-header authlink-redirect "Location"))           => "/authlink"
 
-   (:status login-response)             => 302
-   (extract-location login-response)    => authentication-url
-
-   (:status authlink-redirect)          => 303
-   (extract-location authlink-redirect) => "/authlink"
-
-   (:status authed-response)            => 200
-   (:body authed-response)              => "Authorized page."))
+     (:status authed-response)                                     => 200
+     (:body authed-response)                                       => "Authorized page.")))
 
 (fact
  "A login request redirects to the authorization uri"
+
  (let [auth-redirect  (test-app (ring-mock/request :get "/login"))
-       location       (extract-location auth-redirect)
+       location       (get-header auth-redirect "Location")
        redirect-query (-> location url/url :query clojure.walk/keywordize-keys)]
 
-   (:status auth-redirect)              => 302
-   (:redirect_uri redirect-query)       => "http://127.0.0.1/redirect"
-   (:client_id redirect-query)          => "my-client-id"
-   (not (nil? (:state redirect-query))) => true))
+   (:status auth-redirect)                               => 302
+   (re-find #"/redirect" (:redirect_uri redirect-query)) => "/redirect"
+   (:client_id redirect-query)                           => "my-client-id"
+   (nil? (:state redirect-query))                        => false))
 
 (future-fact
  "access-token-parsefn is used for the token if provided."
 
  (let [{state :state
         ring-session-val :ring-session-val} (setup-valid-state)
-        authlink-redirect  (make-ring-session-get-request
+        authlink-redirect  (make-session-get-request
                             "/redirect"
                             {:code "my-code" :state state}
                             ring-session-val)]))

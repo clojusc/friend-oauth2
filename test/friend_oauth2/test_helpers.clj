@@ -3,68 +3,52 @@
    compojure.core
    friend-oauth2.fixtures)
   (:require
-   [friend-oauth2.workflow :as friend-oauth2]
+   [clojure.string :refer [split]]
+   [friend-oauth2.workflow :as oauth2]
    [cemerick.friend :as friend]
-   [cemerick.url :as url]
+   [cemerick.url :refer [url]]
    [compojure.handler :as handler]
+   [ring.util.response :refer [get-header]]
    [ring.mock.request :as ring-mock]))
 
-(defn extract-header
-  "Extracts header value from headers in response."
-  [header response]
-  (-> response :headers (get header)))
-
 (defn extract-cookie
-  "Extracts cookie from headers in response."
+  "Extracts cookie from headers in response and returns map of contents."
   [response]
-  (first
-   (extract-header "Set-Cookie" response)))
+  (let [cookie-header (get-header response "Set-Cookie")
+        cookie-strs   (-> cookie-header first (split #";"))]
+    (into {} (map #(split % #"=") cookie-strs))))
 
 (defn extract-ring-session-val
   "Returns ring-session value from Set-Cookie
    header in a ring response."
   [response]
-  (let [cookie      (extract-cookie response)
-        cookie-vars (mapcat
-                     #(clojure.string/split % #"=")
-                     (clojure.string/split cookie #";"))]
-    (get (apply hash-map cookie-vars) "ring-session")))
+  (get (extract-cookie response) "ring-session"))
 
 (defn make-cookie-request
   "Wraps ring-request with hash-map formatted
    properly to pass a ring-session cookie."
   [request cookie-val]
-  (merge
-   request
-   {:cookies {"ring-session" {:value cookie-val}}}))
-
-(defn extract-location
-  "Extracts location from headers from redirect response."
-  [response]
-  (extract-header "Location" response))
+  (assoc-in request [:cookies "ring-session" :value] cookie-val))
 
 (defn extract-state-from-redirect-url
   "Parses the response's Location redirect url's query string
    to get the 'state' value passed to the OAuth2 endpoint server
    on the authentication request. (Whew.)"
   [response]
-  (-> response
-      extract-location
-      url/url
-      :query
-      (get "state")))
+  (let [location (-> response (get-header "Location") url)]
+    (get-in location [:query "state"])))
+
 
 ;; The following provides testing for ring requests/responses
 ;; via a "real" friend-authorized/authenticated app.
 
 (declare test-app)
 
-(defn make-ring-session-get-request
+(defn make-session-get-request
   [path params ring-session-val]
-  (test-app
-   (make-cookie-request
-    (ring-mock/request :get path params)
-    ring-session-val)))
+  (-> (ring-mock/request :get path params)
+      (make-cookie-request ring-session-val)
+      test-app))
 
 (defroutes test-app-routes
   (GET "/authlink" request
@@ -75,13 +59,14 @@
    (friend/authenticate
     test-app-routes
     {:allow-anon? true
-     :workflows [(friend-oauth2/workflow
+     :workflows [(oauth2/workflow
                   {:client-config client-config-fixture
                    :uri-config uri-config-fixture
                    :config-auth {:roles #{::user}}})]})))
 
 (defn setup-valid-state
-  "Initiates login to provide valid state for later requests."
+  "Initiates login to provide valid state for later requests.
+   Returns hash-map with valid state and ring-session-val."
   []
   (let [response         (test-app (ring-mock/request :get "/login"))
         state            (extract-state-from-redirect-url response)
