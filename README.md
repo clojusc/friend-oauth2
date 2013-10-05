@@ -36,6 +36,9 @@ A brief description of the necessary configuration:
 
 5. Because OAuth2 is technically a protocol for obtaining 3rd-party **authorization** of resources, `credential-fn` behaves differently than in other workflows: it allows you to intercept the access-token at the end of the 3rd-party authentication process and inject your own functionality.  This is where you would do something like associate the 3rd-party's authorization with a user or roles in your own system, for example.
 
+## Testing
+
+friend-oauth2 uses Midje (https://github.com/marick/Midje) for testing.  You can run all the tests by starting up a repl, running `use 'midje.repl` and running `autotest`, or run `lein midje :autotest` on the command line.
 
 ## To-do:
 
