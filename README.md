@@ -34,14 +34,14 @@ Set your OAuth2 provider settings (using [Google APIs OAuth2](https://developers
   {:authentication-uri {:url "https://accounts.google.com/o/oauth2/auth"
                        :query {:client_id (:client-id client-config)
                                :response_type "code"
-                               :redirect_uri "http://mysite.com/oauth2callback"
+                               :redirect_uri (format-config-uri client-config)
                                :scope "email"}}
 
    :access-token-uri {:url "https://accounts.google.com/o/oauth2/token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
                               :grant_type "authorization_code"
-                              :redirect_uri (format-config-uri client-config)}}}) ; require from friend-oauth/util if you want to avoid typing twice
+                              :redirect_uri (format-config-uri client-config)}}})
 ```
 
 Then add the workflow to your handler per normal Friend configuration:
