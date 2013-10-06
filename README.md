@@ -4,19 +4,74 @@ friend-oauth2 is an oauth2 workflow for [Friend][1].
 
 [Working examples][2] have been implemented for [app.net's OAuth2](https://github.com/appdotnet/api-spec/blob/master/auth.md), [Facebook's server-side authentication](https://developers.facebook.com/docs/authentication/server-side/), and [Github's OAuth2](http://developer.github.com/v3/oauth/).
 
-## Installation
+## Installation and Usage
+
+In project.clj:
 
 ```clojure
+[cemerick.friend "0.2.0"]
 [friend-oauth2 "0.1.0"]
 ```
 
-Obviously requires [Friend][1].
+Somewhere in your code, maybe in your handler:
 
-## Documentation
+```clojure
+[cemerick.friend :as friend]
+[friend-oauth2.workflow :as oauth2]
+```
 
-For now, the best reference is the [Friend-OAuth2 examples][2]. Also please refer to the [Friend README][1].
+Set your OAuth2 provider settings (using [Google APIs OAuth2](https://developers.google.com/accounts/docs/OAuth2) as an example): 
 
-Check out the ring-app handlers in the examples for some examples of how authentication and authorization routes are set up per Friend's config.
+```clojure
+(def config-auth {:roles #{::oauth2-user}})
+
+(def client-config
+  {:client-id "123456789012.apps.googleusercontent.com"
+   :client-secret "mysecret"
+   :callback {:domain "http://mysite.com" :path "/oauth2callback"}})
+
+(def uri-config
+  {:authentication-uri {:url "https://accounts.google.com/o/oauth2/auth"
+                       :query {:client_id (:client-id client-config)
+                               :response_type "code"
+                               :redirect_uri "http://mysite.com/oauth2callback"
+                               :scope "email"}}
+
+   :access-token-uri {:url "https://accounts.google.com/o/oauth2/token"
+                      :query {:client_id (:client-id client-config)
+                              :client_secret (:client-secret client-config)
+                              :grant_type "authorization_code"
+                              :redirect_uri (format-config-uri client-config)}}}) ; require from friend-oauth/util if you want to avoid typing twice
+```
+
+Then add the workflow to your handler per normal Friend configuration:
+
+```clojure
+(def friend-config
+  {:allow-anon? true
+   :workflows   [(oauth2/workflow
+                  {:client-config client-config
+                   :uri-config uri-config
+                   :config-auth config-auth})]})
+
+(def app
+  (-> ring-app
+      (friend/authenticate friend-config)
+      handler/site))
+```
+
+...and you can then authorize your routes:
+
+```clojure
+(GET "/authlink" request
+  (friend/authorize #{::oauth2-user} "Authorized page."))
+
+```
+
+For some more examples, please check out the  [Friend-OAuth2 examples][2]. Also please refer to the [Friend README][1].
+
+Check out the ring-app handlers in the examples for some other examples of how authentication and authorization routes are set up per Friend's config.
+
 
 ### Configuring your handler.
 
