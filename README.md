@@ -65,7 +65,6 @@ Then add the workflow to your handler per normal Friend configuration:
 ```clojure
 (GET "/authlink" request
   (friend/authorize #{::oauth2-user} "Authorized page."))
-
 ```
 
 For some more examples, please check out the  [Friend-OAuth2 examples][2]. Also please refer to the [Friend README][1].
