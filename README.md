@@ -67,7 +67,7 @@ Then add the workflow to your handler per normal Friend configuration:
   (friend/authorize #{::oauth2-user} "Authorized page."))
 ```
 
-For some more examples, please check out the  [Friend-OAuth2 examples][2]. Also please refer to the [Friend README][1].
+For some more examples, please check out the  [friend-oauth2 examples][2]. Also please refer to the [Friend README][1].
 
 Check out the ring-app handlers in the examples for some other examples of how authentication and authorization routes are set up per Friend's config.
 
