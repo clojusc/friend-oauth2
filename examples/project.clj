@@ -1,4 +1,4 @@
-(defproject friend-oauth2-examples "0.0.4"
+(defproject friend-oauth2-examples "0.0.5"
   :description "Friend Oauth2 Workflow examples, includes App.net, Facebook, Github and Google handlers."
 
   :url "https://github.com/ddellacosta/friend-oauth2-examples"
@@ -9,7 +9,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [compojure "1.1.5" :exclusions [ring/ring-core org.clojure/core.incubator]]
                  [com.cemerick/friend "0.2.0" :exclusions [ring/ring-core]]
-                 [friend-oauth2 "0.1.0" :exclusions [org.apache.httpcomponents/httpcore]]
+                 [friend-oauth2 "0.1.1" :exclusions [org.apache.httpcomponents/httpcore]]
                  [cheshire "5.2.0"]
                  [ring-server "0.3.0" :exclusions [ring]]]
 
