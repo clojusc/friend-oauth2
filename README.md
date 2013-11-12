@@ -10,7 +10,7 @@ In project.clj:
 
 ```clojure
 [cemerick.friend "0.2.0"]
-[friend-oauth2 "0.1.0"]
+[friend-oauth2 "0.1.1"]
 ```
 
 Somewhere in your code, maybe in your handler:
