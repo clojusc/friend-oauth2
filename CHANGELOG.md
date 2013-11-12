@@ -1,6 +1,9 @@
+## Changelog 0.1.0 -> 0.1.1
+
+* (this time for reals) adds credential-fn for injecting your own functionality in the post-3rd-party-authentication stage. Thanks go to Kevin Lynagh (https://github.com/lynaghk) for this feature.
+
 ## Changelog 0.0.4 -> 0.1.0
 
-* adds credential-fn for injecting your own functionality in the post-3rd-party-authentication stage. Thanks go to Kevin Lynagh (https://github.com/lynaghk) for this feature.
 * More refactoring of entire codebase.  Tests and code re-written to be more idiomatic Clojure.
 
 ## Changelog 0.0.3 -> 0.0.4
