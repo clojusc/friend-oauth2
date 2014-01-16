@@ -9,7 +9,7 @@ friend-oauth2 is an oauth2 workflow for [Friend][1].
 In project.clj:
 
 ```clojure
-[cemerick.friend "0.2.0"]
+[com.cemerick/friend "0.2.0"]
 [friend-oauth2 "0.1.1"]
 ```
 
