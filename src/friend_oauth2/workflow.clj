@@ -20,12 +20,10 @@
   "POSTs request to OAauth2 provider for authorization token."
   [{:keys [uri-config access-token-parsefn]} code]
   (let [access-token-uri (:access-token-uri uri-config)
-        query-map        (merge {:grant_type "authorization_code"}
-                                (util/replace-authz-code access-token-uri code))
-        token-url        (assoc access-token-uri :query query-map)
-        token-response   (client/post (:url token-url) {:form-params (:query token-url)})
+        query-map        (assoc (util/replace-authz-code access-token-uri code)
+                           :grant_type "authorization_code")
         token-parse-fn   (or access-token-parsefn util/extract-access-token)]
-    (token-parse-fn token-response)))
+    (token-parse-fn (client/post (:url access-token-uri) {:form-params query-map}))))
 
 (defn- redirect-to-provider!
   "Redirects user to OAuth2 provider. Code should be in response."
@@ -41,7 +39,7 @@
   "Workflow for OAuth2"
   [config]
   (fn [request]
-    (if (is-oauth2-callback? config request)
+    (when (is-oauth2-callback? config request)
       ;; Extracts code from request if we are getting here via OAuth2 callback.
       ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.2
       (let [{:keys [state code]} (:params request)
