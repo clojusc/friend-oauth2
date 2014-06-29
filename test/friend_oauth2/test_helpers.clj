@@ -62,6 +62,8 @@
      :workflows [(oauth2/workflow
                   {:client-config client-config-fixture
                    :uri-config uri-config-fixture
+                   :auth-error-fn (fn [error]
+                                    (ring.util.response/response error))
                    :credential-fn (fn [token]
                                     {:identity token
                                      :roles #{::user}})})]})))
