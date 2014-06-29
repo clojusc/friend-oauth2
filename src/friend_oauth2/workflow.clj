@@ -20,8 +20,8 @@
   "POSTs request to OAauth2 provider for authorization token."
   [{:keys [uri-config access-token-parsefn]} code]
   (let [access-token-uri (:access-token-uri uri-config)
-        query-map        (assoc (util/replace-authz-code access-token-uri code)
-                           :grant_type "authorization_code")
+        query-map        (-> (util/replace-authz-code access-token-uri code)
+                             (assoc :grant_type "authorization_code"))
         token-parse-fn   (or access-token-parsefn util/extract-access-token)]
     (token-parse-fn (client/post (:url access-token-uri) {:form-params query-map}))))
 
