@@ -7,9 +7,9 @@
    [ring.util.request :as request]))
 
 (s/defschema ClientConfig {:client-id     String
-                            :client-secret String
-                            :callback {:domain String
-                                       :path   String}})
+                           :client-secret String
+                           :callback {:domain String
+                                      :path   String}})
 
 (defn- default-credential-fn
   [creds]
