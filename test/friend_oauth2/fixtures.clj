@@ -8,6 +8,15 @@
    :client-secret "my-client-secret"
    :callback {:domain "http://127.0.0.1" :path "/redirect"}})
 
+(def client-config-fixture-invalid
+  {:client-id "my-client-id"
+   :client-secret "my-client-secret"
+   :callback {:domain "http://127.0.0.1" :path-MALFORMED "/redirect"}})
+
+(def client-config-fixture-missing-field
+  {:client-id "my-client-id"
+   :callback {:domain "http://127.0.0.1" :path "/redirect"}})
+
 (def uri-config-fixture
   {:authentication-uri {:url "http://example.com/authenticate"
                         :query {:client_id (:client-id client-config-fixture)

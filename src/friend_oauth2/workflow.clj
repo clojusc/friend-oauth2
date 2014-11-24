@@ -3,7 +3,13 @@
    [friend-oauth2.util :as util]
    [cemerick.friend :as friend]
    [clj-http.client :as client]
+   [schema.core :as s]
    [ring.util.request :as request]))
+
+(s/defschema Client-config {:client-id     String
+                            :client-secret String
+                            :callback {:domain String
+                                       :path   String}})
 
 (defn- default-credential-fn
   [creds]
@@ -35,9 +41,10 @@
         ring.util.response/redirect
         (assoc :session session-with-af-token))))
 
-(defn workflow
+(s/defn ^:always-validate workflow
   "Workflow for OAuth2"
-  [config]
+  [config :- {(s/required-key :client-config) Client-config
+               s/Any s/Any}];; The rest of config.
   (fn [request]
     (when (is-oauth2-callback? config request)
       ;; Extracts code from request if we are getting here via OAuth2 callback.

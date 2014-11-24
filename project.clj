@@ -1,6 +1,6 @@
 (defproject friend-oauth2 "0.1.3"
   :description "OAuth2 workflow for Friend (https://github.com/cemerick/friend). (Bug reports/contributions welcome!)"
-  :url "https://github.com/ddellacosta/friend-oauth2"
+  :url "https://github.com/clojusc/friend-oauth2"
   :license {:name "MIT License"
             :url "http://dd.mit-license.org"}
 

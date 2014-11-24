@@ -75,6 +75,14 @@
     (:status authlink-error)                                     => 200
     (:body authlink-error)                                       => "auth-error"))
 
+(fact
+  "Malformed client-config produces an exception"
+  (let [invalid-config       {:client-config client-config-fixture-invalid}
+        missing-field-config {:client-config client-config-fixture-missing-field}]
+    (oauth2/workflow invalid-config)       => (throws Exception)
+    (oauth2/workflow missing-field-config) => (throws Exception)))
+
+
 (future-fact
  "access-token-parsefn is used for the token if provided."
 
