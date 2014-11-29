@@ -6,7 +6,7 @@
    [schema.core :as s]
    [ring.util.request :as request]))
 
-(s/defschema Client-config {:client-id     String
+(s/defschema ClientConfig {:client-id     String
                             :client-secret String
                             :callback {:domain String
                                        :path   String}})
@@ -43,7 +43,7 @@
 
 (s/defn ^:always-validate workflow
   "Workflow for OAuth2"
-  [config :- {(s/required-key :client-config) Client-config
+  [config :- {(s/required-key :client-config) ClientConfig
                s/Any s/Any}];; The rest of config.
   (fn [request]
     (when (is-oauth2-callback? config request)
