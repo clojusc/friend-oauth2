@@ -17,6 +17,7 @@
 
   :profiles {:dev
              {:dependencies [[ring-mock "0.1.5"]
-                             [midje "1.5.1"];; :exclusions [org.clojure/core.incubator joda-time]]
-                             [com.cemerick/url "0.1.0"];; :exclusions [org.clojure/core.incubator]]
+                             [org.clojure/tools.nrepl "0.2.5"]
+                             [midje "1.5.1"] ;; :exclusions [org.clojure/core.incubator joda-time]]
+                             [com.cemerick/url "0.1.0"] ;; :exclusions [org.clojure/core.incubator]]
                              [compojure "1.1.5"]]}})
