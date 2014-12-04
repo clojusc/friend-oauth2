@@ -41,3 +41,9 @@
  "Replaces the authorization code"
  ((oauth2-util/replace-authz-code (uri-config-fixture :access-token-uri) "my-code") :code)
  => "my-code")
+
+(fact
+ "Replaces '+', '/' and '=' in base64 CSRF token."
+ (with-redefs [crypto.random/base64 (constantly "TaUtFckiPp+v7yRx8aYC5OGAU1k/UouWtqI7e9IH8pUtm2/r00d5YVFy+JdS8zaWuMS=j0dwNDHt4vym")]
+   (let [correct-token "TaUtFckiPp-v7yRx8aYC5OGAU1k-UouWtqI7e9IH8pUtm2-r00d5YVFy-JdS8zaWuMS-j0dwNDHt4vym"]
+     (oauth2-util/generate-anti-forgery-token) => correct-token)))

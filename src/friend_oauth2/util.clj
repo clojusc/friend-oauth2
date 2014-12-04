@@ -2,7 +2,7 @@
   (:require
    [cheshire.core :refer [parse-string]]
    [ring.util.codec :as ring-codec]
-   [clojure.string :refer [split join]]
+   [clojure.string :as string :refer [split join]]
    [crypto.random :as random]))
 
 (defn format-config-uri
@@ -43,4 +43,4 @@
 (defn generate-anti-forgery-token
   "Generates random string for anti-forgery-token."
   []
-  (-> (random/base64 60) (split #"/") join))
+  (string/replace (random/base64 60) #"[\+=/]" "-"))
