@@ -9,7 +9,10 @@
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
 
-(def config-auth {:roles #{::user}})
+(defn credential-fn
+  [token]
+  ;;lookup token in DB or whatever to fetch appropriate :roles
+  {:identity token :roles #{::user}})
 
 (def client-config
   {:client-id ""
@@ -54,4 +57,4 @@
      :workflows [(oauth2/workflow
                   {:client-config client-config
                    :uri-config uri-config
-                   :config-auth config-auth})]})))
+                   :credential-fn credential-fn})]})))

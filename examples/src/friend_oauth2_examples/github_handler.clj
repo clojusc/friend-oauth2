@@ -14,7 +14,10 @@
 (declare render-repos-page)
 (declare get-github-repos)
 
-(def config-auth {:roles #{::user}})
+(defn credential-fn
+  [token]
+  ;;lookup token in DB or whatever to fetch appropriate :roles
+  {:identity token :roles #{::user}})
 
 (def client-config
   {:client-id ""
@@ -51,7 +54,7 @@
                   {:client-config client-config
                    :uri-config uri-config
                    :access-token-parsefn get-access-token-from-params
-                   :config-auth config-auth})]})))
+                   :credential-fn credential-fn})]})))
 
 (defn render-status-page [request]
   (let [count (:count (:session request) 0)
