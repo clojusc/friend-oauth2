@@ -37,8 +37,7 @@
 (defn extract-anti-forgery-token
   "Extracts the anti-csrf state key from the response"
   [{session :session}]
-  (if-let [pairs (first (filter #(= (second %1) "state") session))]
-    (-> pairs first name)))
+  (:state session))
 
 (defn generate-anti-forgery-token
   "Generates random string for anti-forgery-token."

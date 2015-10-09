@@ -1,3 +1,7 @@
+## Changelog 0.1.3 -> 0.1.4
+
+* apply patch suggested in https://github.com/ddellacosta/friend-oauth2/issues/36 to prevent infinite redirects
+
 ## Changelog 0.1.0 -> 0.1.1
 
 * (this time for reals) adds credential-fn for injecting your own functionality in the post-3rd-party-authentication stage. Thanks go to Kevin Lynagh (https://github.com/lynaghk) for this feature.

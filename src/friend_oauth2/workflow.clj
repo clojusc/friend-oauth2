@@ -35,7 +35,7 @@
   "Redirects user to OAuth2 provider. Code should be in response."
   [{:keys [uri-config]} request]
   (let [anti-forgery-token    (util/generate-anti-forgery-token)
-        session-with-af-token (assoc (:session request) (keyword anti-forgery-token) "state")]
+        session-with-af-token (assoc (:session request) :state anti-forgery-token)]
     (-> uri-config
         (util/format-authn-uri anti-forgery-token)
         ring.util.response/redirect
@@ -59,7 +59,7 @@
               (vary-meta auth-map merge {::friend/workflow :oauth2
                                          ::friend/redirect-on-auth? true
                                          :type ::friend/auth})))
-         
+
           (let [auth-error-fn (:auth-error-fn config)]
             (if (and error auth-error-fn)
               (auth-error-fn error)
