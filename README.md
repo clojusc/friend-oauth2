@@ -1,3 +1,6 @@
+
+# I am no longer maintaining this library actively, for a number of reasons. If you are interested in taking over maintenance let me know, otherwise feel free to fork it and modify it to your heart's content.  I recommend taking a look at [buddy](https://github.com/funcool/buddy), and also consider some of the [other Clojure OAuth2 libraries](https://github.com/ddellacosta/oauth2-client#other-related-libraries) out there to see how they fit in with your desired flow.
+
 # friend-oauth2
 
 Current version on [clojars](https://clojars.org/friend-oauth2):
