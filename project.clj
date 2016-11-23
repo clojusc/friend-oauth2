@@ -1,4 +1,4 @@
-(defproject clojusc/friend-oauth2 "0.1.4"
+(defproject clojusc/friend-oauth2 "0.1.5"
   :description "OAuth2 workflow for Friend"
   :url "https://github.com/clojusc/friend-oauth2"
   :license {:name "MIT License"
