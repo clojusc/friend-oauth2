@@ -9,7 +9,16 @@
 [![][logo]][logo-large]
 
 
-## Introduction
+#### Contents
+
+* [Introduction](#introduction-)
+* [Latest Release](#latest-release-)
+* [Installation and Usage](#installation-and-usage-)
+* [Contributing/Testing](#contributingtesting-)
+* [License](#license-)
+
+
+## Introduction [&#x219F;](#contents)
 
 friend-oauth2 is an OAuth2 ([site][oauth2 site], [RFC][oauth2 rfc]) workflow
 for [Friend][friend url]. [Working examples][friend oauth2 examples] have been
@@ -18,7 +27,7 @@ implemented for [app.net's OAuth2][app.net's OAuth2],
 [Github's OAuth2][Github's OAuth2].
 
 
-## Latest Release
+## Latest Release [&#x219F;](#contents)
 
 Current version on [clojars][clojars]:
 
@@ -27,7 +36,7 @@ Current version on [clojars][clojars]:
 ```
 
 
-## Installation and Usage
+## Installation and Usage [&#x219F;](#contents)
 
 Please see the [detailed documentation in the wiki][docs] that
 [pjlegato](https://github.com/pjlegato) wrote for details on configuration.
@@ -40,7 +49,7 @@ Check out the ring-app handlers in the examples for some other examples of
 how authentication and authorization routes are set up per friend's config.
 
 
-## Contributing/Testing
+## Contributing/Testing [&#x219F;](#contents)
 
 Bug reports and pull requests are most welcome.  There are outstanding issues
 that I could use development help with if you are interested in contributing.
@@ -52,7 +61,7 @@ can run all the tests by starting up a repl, running `use 'midje.repl` and
 running `autotest`, or run `lein midje :autotest` on the command line.
 
 
-## License
+## License [&#x219F;](#contents)
 
 Copyright © 2012-2016, Dave Della Costa
 
