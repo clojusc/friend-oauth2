@@ -6,6 +6,8 @@
 
 *OAuth2 workflow for Clojure/Ring friend framework*
 
+[![][logo]][logo-large]
+
 
 ## Introduction
 
@@ -69,8 +71,8 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [travis-badge]: https://travis-ci.org/oubiwann/friend-oauth2.png?branch=master
 [deps]: http://jarkeeper.com/oubiwann/friend-oauth2
 [deps-badge]: http://jarkeeper.com/oubiwann/friend-oauth2/status.svg
-[logo]: resources/images/Meson-nonet-spin-0-250x.png
-[logo-large]: resources/images/Meson-nonet-spin-0-1000x.png
+[logo]: resources/images/friend-oauth-logo-x250.png
+[logo-large]: resources/images/friend-oauth-logo-x1000.png
 [tag-badge]: https://img.shields.io/github/tag/oubiwann/friend-oauth2.svg?maxAge=2592000
 [tag]: https://github.com/oubiwann/friend-oauth2/tags
 [clojure-v]: https://img.shields.io/badge/clojure-1.8.0-blue.svg
