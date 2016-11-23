@@ -1,10 +1,11 @@
 # friend-oauth2
+[![Build Status][travis-badge]][travis]
+[![Dependencies Status][deps-badge]][deps]
+[![Clojars Project][clojars-badge]][clojars]
+[![Clojure version][clojure-v]](project.clj)
 
-Current version on [clojars][clojars]:
+*OAuth2 workflow for Clojure/Ring friend framework*
 
-```clojure
-[friend-oauth2 "0.1.3"]
-```
 
 ## Introduction
 
@@ -13,6 +14,15 @@ for [Friend][friend url]. [Working examples][friend oauth2 examples] have been
 implemented for [app.net's OAuth2][app.net's OAuth2],
 [Facebook's server-side authentication][Facebook's auth], and
 [Github's OAuth2][Github's OAuth2].
+
+
+## Latest Release
+
+Current version on [clojars][clojars]:
+
+```clojure
+[friend-oauth2 "0.1.3"]
+```
 
 
 ## Installation and Usage
@@ -54,4 +64,15 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [Facebook's auth]: https://developers.facebook.com/docs/authentication/server-side/
 [Github's OAuth2]: http://developer.github.com/v3/oauth/
 [docs]: https://github.com/ddellacosta/friend-oauth2/wiki
-[clojars]: https://clojars.org/friend-oauth2
+
+[travis]: https://travis-ci.org/oubiwann/friend-oauth2
+[travis-badge]: https://travis-ci.org/oubiwann/friend-oauth2.png?branch=master
+[deps]: http://jarkeeper.com/oubiwann/friend-oauth2
+[deps-badge]: http://jarkeeper.com/oubiwann/friend-oauth2/status.svg
+[logo]: resources/images/Meson-nonet-spin-0-250x.png
+[logo-large]: resources/images/Meson-nonet-spin-0-1000x.png
+[tag-badge]: https://img.shields.io/github/tag/oubiwann/friend-oauth2.svg?maxAge=2592000
+[tag]: https://github.com/oubiwann/friend-oauth2/tags
+[clojure-v]: https://img.shields.io/badge/clojure-1.8.0-blue.svg
+[clojars]: https://clojars.org/oubiwann/friend-oauth2
+[clojars-badge]: https://img.shields.io/clojars/v/friend-oauth2.svg
