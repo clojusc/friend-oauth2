@@ -58,7 +58,7 @@ of course in this case as well a pull request is most welcome.
 
 friend-oauth2 uses Midje (https://github.com/marick/Midje) for testing.  You
 can run all the tests by starting up a repl, running `use 'midje.repl` and
-running `autotest`, or run `lein midje :autotest` on the command line.
+running `autotest`, or run `lein with-profile test midje` on the command line.
 
 
 ## License [&#x219F;](#contents)
