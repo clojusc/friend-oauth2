@@ -1,7 +1,7 @@
 language: clojure
 lein: 2.7.1
 script:
-  - lein with-profile $CLOJURE_VERSION,+test midje
+  - lein with-profile +${CLOJURE_VERSION},+test midje
 jdk:
   - oraclejdk8
   - oraclejdk7
