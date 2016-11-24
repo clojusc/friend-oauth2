@@ -5,8 +5,7 @@ script:
 jdk:
   - oraclejdk8
   - oraclejdk7
-  - openjdk6
-  #- openjdk7
+  - openjdk7
 env:
   - CLOJURE_VERSION=clj16
   - CLOJURE_VERSION=clj17
