@@ -5,7 +5,6 @@
     :name "MIT License"
     :url "http://dd.mit-license.org"}
   :dependencies [
-    [org.clojure/clojure "1.8.0"]
     [com.cemerick/friend "0.2.3"
       :exclusions [org.apache.httpcomponents/httpclient]]
     [ring "1.5.0"]
@@ -25,11 +24,25 @@
         [ring-mock "0.1.5"]]
       :plugins [
         [lein-midje "3.2.1"]]}
+    :clj15 {
+      :dependencies [
+        [org.clojure/clojure "1.5.0"]
+        [medley "0.6.0" :exclusions [org.clojure/clojure]]]}
+    :clj16 {
+      :dependencies [
+        [org.clojure/clojure "1.6.0"]
+        [medley "0.6.0" :exclusions [org.clojure/clojure]]]}
+    :clj17 {
+      :dependencies [[org.clojure/clojure "1.7.0"]]}
+    :clj18 {
+      :dependencies [[org.clojure/clojure "1.8.0"]]}
+    :clj19 {
+      :dependencies [[org.clojure/clojure "1.9.0-alpha14"]]}
     :dev {
       :source-paths ["dev-resources/src"]
       :repl-options {:init-ns meson.dev}
       :dependencies [
-        [org.clojure/tools.namespace "0.2.12"
+        [org.clojure/tools.namespace "0.2.11"
           :exclusions [org.clojure/clojure]]]}
     :docs {
       :plugins [[lein-codox "0.10.2"]

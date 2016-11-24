@@ -1,0 +1,18 @@
+language: clojure
+lein: 2.7.1
+script:
+  - lein with-profile $CLOJURE_VERSION,+test midje
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk6
+  #- openjdk7
+env:
+  - CLOJURE_VERSION=clj14
+  - CLOJURE_VERSION=clj16
+  - CLOJURE_VERSION=clj17
+  - CLOJURE_VERSION=clj18
+  #- CLOJURE_VERSION=clj19
+notifications:
+  email:
+      - oubiwann@gmail.com
