@@ -1,15 +1,14 @@
 (ns friend-oauth2.workflow
-  (:require
-   [friend-oauth2.util :as util]
-   [cemerick.friend :as friend]
-   [clj-http.client :as client]
-   [schema.core :as s]
-   [ring.util.request :as request]))
+  (:require [cemerick.friend :as friend]
+            [clj-http.client :as client]
+            [friend-oauth2.util :as util]
+            [ring.util.request :as request]
+            [schema.core :as s]))
 
-(s/defschema ClientConfig {:client-id     String
+(s/defschema ClientConfig {:client-id String
                            :client-secret String
                            :callback {:domain String
-                                      :path   String}})
+                                      :path String}})
 
 (defn- default-credential-fn
   [creds]
