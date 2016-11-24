@@ -8,7 +8,6 @@ jdk:
   - openjdk6
   #- openjdk7
 env:
-  - CLOJURE_VERSION=clj14
   - CLOJURE_VERSION=clj16
   - CLOJURE_VERSION=clj17
   - CLOJURE_VERSION=clj18
