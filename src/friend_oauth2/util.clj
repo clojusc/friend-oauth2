@@ -1,6 +1,7 @@
 (ns friend-oauth2.util
-  (:require [cheshire.core :as cheshire]
+  (:require [clojure.data.json :as json]
             [clojure.string :as string]
+            [clojure.tools.logging :as log]
             [crypto.random :as random]
             [ring.util.codec :as ring-codec]))
 
@@ -12,6 +13,9 @@
 (defn format-authn-uri
   "Formats the client authentication uri"
   [{{:keys [query url]} :authentication-uri} anti-forgery-token]
+  (log/error "query:" query)
+  (log/error "url:" url)
+  (log/error "anti-forgery-token:" anti-forgery-token)
   (->> (assoc query :state anti-forgery-token)
        ring-codec/form-encode
        (str url "?")))
@@ -26,7 +30,7 @@
   "Returns the access token from a JSON response body"
   [{body :body}]
   (-> body
-      (cheshire/parse-string true)
+      (json/read-str :key-fn keyword)
       :access_token))
 
 (defn get-access-token-from-params
