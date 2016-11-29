@@ -127,7 +127,7 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [logo-large]: resources/images/friend-oauth-logo-x1000.png
 [tag-badge]: https://img.shields.io/github/tag/clojusc/friend-oauth2.svg?maxAge=2592000
 [tag]: https://github.com/clojusc/friend-oauth2/tags
-[clojure-v]: https://img.shields.io/badge/clojure-1.5-to-1.8-blue.svg
+[clojure-v]: https://img.shields.io/badge/Clojure-1.5+-blue.svg
 [project]: https://github.com/clojusc/friend-oauth2/blob/master/project.clj
 [clojars]: https://clojars.org/clojusc/friend-oauth2
 [clojars-badge]: https://img.shields.io/clojars/v/friend-oauth2.svg
