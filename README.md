@@ -2,7 +2,7 @@
 [![Build Status][travis-badge]][travis]
 [![Dependencies Status][deps-badge]][deps]
 [![Clojars Project][clojars-badge]][clojars]
-[![Clojure version][clojure-v]](project.clj)
+[![Clojure version][clojure-v]][project]
 
 *OAuth2 workflow for Clojure/Ring friend framework*
 
@@ -11,11 +11,20 @@
 
 #### Contents
 
-* [Introduction](#introduction-)
 * [Latest Release](#latest-release-)
+* [Introduction](#introduction-)
 * [Installation and Usage](#installation-and-usage-)
 * [Contributing/Testing](#contributingtesting-)
 * [License](#license-)
+
+
+## Latest Release [&#x219F;](#contents)
+
+Current version on [clojars][clojars]:
+
+```clojure
+[friend-oauth2 "0.1.5"]
+```
 
 
 ## Introduction [&#x219F;](#contents)
@@ -29,12 +38,14 @@ implemented for [app.net's OAuth2][app.net's OAuth2],
 
 ### New Maintainer!
 
-**Where is [Dave Della Costa's version][Dave Della Costa's version]?** It's here! 
+**Where is [Dave Della Costa's version][Dave Della Costa's version]?** It's here!
 The clojusc org is the new maintainer for `friend-oauth2`. However, there is
 more to that answer, if you are asking about versions of releases:
 
-* Dave's releases of `friend-oauth2`: https://clojars.org/ddellacosta/friend-oauth2
+* Dave's releases of `friend-oauth2` are here, everything 0.1.3 and below:
+  https://github.com/clojusc/friend-oauth2/releases
 * Clojusc releases of `friend-oauth2`: https://clojars.org/clojusc/friend-oauth2
+
 
 ### 0.1.3 & 0.1.3-transitional
 
@@ -62,15 +73,6 @@ wanted to do was run CI tasks against several versions of the JVM as well as
 Clojure itself. 0.1.5 introduces this capability in Travis CI with a new build
 matrix.
 
-
-
-## Latest Release [&#x219F;](#contents)
-
-Current version on [clojars][clojars]:
-
-```clojure
-[friend-oauth2 "0.1.5"]
-```
 
 
 ## Installation and Usage [&#x219F;](#contents)
@@ -126,5 +128,6 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [tag-badge]: https://img.shields.io/github/tag/clojusc/friend-oauth2.svg?maxAge=2592000
 [tag]: https://github.com/clojusc/friend-oauth2/tags
 [clojure-v]: https://img.shields.io/badge/clojure-1.5-to-1.8-blue.svg
+[project]: https://github.com/clojusc/friend-oauth2/blob/master/project.clj
 [clojars]: https://clojars.org/clojusc/friend-oauth2
 [clojars-badge]: https://img.shields.io/clojars/v/friend-oauth2.svg
