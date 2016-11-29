@@ -8,7 +8,7 @@
     [org.clojure/data.json "0.2.6"]
     [com.cemerick/friend "0.2.3"
       :exclusions [org.apache.httpcomponents/httpclient]]
-    [ring/ring-core "1.6.0-beta6"]
+    [ring "1.6.0-beta6"]
     [ring/ring-codec "1.0.1"]
     [ring/ring-jetty-adapter "1.6.0-beta6"]
     [clj-http "3.4.1"]
