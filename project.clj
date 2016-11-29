@@ -9,6 +9,7 @@
       :exclusions [org.apache.httpcomponents/httpclient]]
     [ring "1.5.0"]
     [ring/ring-codec "1.0.1"]
+    [ring/ring-jetty-adapter "1.6.0-beta6"]
     [clj-http "3.4.1"]
     [cheshire "5.6.3"]
     [prismatic/schema "1.1.3"]
