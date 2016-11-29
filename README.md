@@ -32,7 +32,7 @@ implemented for [app.net's OAuth2][app.net's OAuth2],
 Current version on [clojars][clojars]:
 
 ```clojure
-[friend-oauth2 "0.1.3"]
+[clojusc/friend-oauth2 "0.1.5"]
 ```
 
 
@@ -70,20 +70,20 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [oauth2 site]: https://oauth.net/2/
 [oauth2 rfc]: https://tools.ietf.org/html/rfc6749
 [friend url]: https://github.com/cemerick/friend
-[friend oauth2 examples]: https://github.com/ddellacosta/friend-oauth2-examples
+[friend oauth2 examples]: https://github.com/clojusc/friend-oauth2-examples
 [app.net's OAuth2]: https://github.com/appdotnet/api-spec/blob/master/auth.md
 [Facebook's auth]: https://developers.facebook.com/docs/authentication/server-side/
 [Github's OAuth2]: http://developer.github.com/v3/oauth/
-[docs]: https://github.com/ddellacosta/friend-oauth2/wiki
+[docs]: https://github.com/clojusc/friend-oauth2/wiki
 
-[travis]: https://travis-ci.org/oubiwann/friend-oauth2
-[travis-badge]: https://travis-ci.org/oubiwann/friend-oauth2.png?branch=master
-[deps]: http://jarkeeper.com/oubiwann/friend-oauth2
-[deps-badge]: http://jarkeeper.com/oubiwann/friend-oauth2/status.svg
+[travis]: https://travis-ci.org/clojusc/friend-oauth2
+[travis-badge]: https://travis-ci.org/clojusc/friend-oauth2.png?branch=master
+[deps]: http://jarkeeper.com/clojusc/friend-oauth2
+[deps-badge]: http://jarkeeper.com/clojusc/friend-oauth2/status.svg
 [logo]: resources/images/friend-oauth-logo-x250.png
 [logo-large]: resources/images/friend-oauth-logo-x1000.png
-[tag-badge]: https://img.shields.io/github/tag/oubiwann/friend-oauth2.svg?maxAge=2592000
-[tag]: https://github.com/oubiwann/friend-oauth2/tags
-[clojure-v]: https://img.shields.io/badge/clojure-1.5-to-1.8-blue.svg
-[clojars]: https://clojars.org/oubiwann/friend-oauth2
-[clojars-badge]: https://img.shields.io/clojars/v/friend-oauth2.svg
+[tag-badge]: https://img.shields.io/github/tag/clojusc/friend-oauth2.svg?maxAge=2592000
+[tag]: https://github.com/clojusc/friend-oauth2/tags
+[clojure-v]: https://img.shields.io/badge/clojure-1.5+-blue.svg
+[clojars]: https://clojars.org/clojusc/friend-oauth2
+[clojars-badge]: https://img.shields.io/clojars/v/clojusc/friend-oauth2.svg
