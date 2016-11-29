@@ -27,12 +27,49 @@ implemented for [app.net's OAuth2][app.net's OAuth2],
 [Github's OAuth2][Github's OAuth2].
 
 
+### New Maintainer!
+
+**Where is [Dave Della Costa's version][Dave Della Costa's version]?** It's here! 
+The clojusc org is the new maintainer for `friend-oauth2`. However, there is
+more to that answer, if you are asking about versions of releases:
+
+* Dave's releases of `friend-oauth2`: https://clojars.org/ddellacosta/friend-oauth2
+* Clojusc releases of `friend-oauth2`: https://clojars.org/clojusc/friend-oauth2
+
+### 0.1.3 & 0.1.3-transitional
+
+What's more, the Clojuse 0.1.3 release of `friend-oauth2` is exactly the same as
+Dave's 0.1.3 release, with the exception that the group ID has been changed to
+`clojusc`. All the code, all of the deps, etc., are exactly the same. This is
+tagged in Github as [0.1.3-transitional][0.1.3-transitional]. This is provided as
+a convenience to developers that wish to switch to the new, supported org for
+`friend-oauth2`, but don't want to take on any burdens of upgrade maintenance at
+this time.
+
+
+### 0.1.4
+
+Dave made a series of changes and brought in PRs when he was still maintaining
+the project that hadn't gotten a release -- those are included in 0.1.4. Also,
+there were some community contributions made after that time that have also
+been pulled in.
+
+
+### 0.1.5
+
+When Clojusc took over maintenance of `friend-oauth2`, one of the things we
+wanted to do was run CI tasks against several versions of the JVM as well as
+Clojure itself. 0.1.5 introduces this capability in Travis CI with a new build
+matrix.
+
+
+
 ## Latest Release [&#x219F;](#contents)
 
 Current version on [clojars][clojars]:
 
 ```clojure
-[friend-oauth2 "0.1.3"]
+[friend-oauth2 "0.1.5"]
 ```
 
 
@@ -65,6 +102,8 @@ running `autotest`, or run `lein with-profile test midje` on the command line.
 
 Copyright © 2012-2016, Dave Della Costa
 
+Copyright © 2016, Clojure-Aided Enrinchment Center
+
 Distributed under the MIT License (http://dd.mit-license.org/)
 
 [oauth2 site]: https://oauth.net/2/
@@ -75,6 +114,8 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [Facebook's auth]: https://developers.facebook.com/docs/authentication/server-side/
 [Github's OAuth2]: http://developer.github.com/v3/oauth/
 [docs]: https://github.com/ddellacosta/friend-oauth2/wiki
+[Dave Della Costa's version]: https://github.com/ddellacosta/friend-oauth2/
+[0.1.3-transitional]: https://github.com/clojusc/friend-oauth2/releases/tag/0.1.3-transitional
 
 [travis]: https://travis-ci.org/clojusc/friend-oauth2
 [travis-badge]: https://travis-ci.org/clojusc/friend-oauth2.png?branch=master
