@@ -11,7 +11,6 @@
     [ring/ring-core "1.6.0-beta6"]
     [ring/ring-codec "1.0.1"]
     [clj-http "3.4.1"]
-    [cheshire "5.6.3"]
     [prismatic/schema "1.1.3"]
     [clojusc/twig "0.3.0"]
     [crypto-random "1.2.0"]]
