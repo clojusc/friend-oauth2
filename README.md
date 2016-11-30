@@ -14,6 +14,7 @@
 * [Latest Release](#latest-release-)
 * [Introduction](#introduction-)
 * [Installation and Usage](#installation-and-usage-)
+* [Documentation](#documentation-)
 * [Contributing/Testing](#contributingtesting-)
 * [License](#license-)
 
@@ -86,6 +87,12 @@ For some more examples, please check out the
 
 Check out the ring-app handlers in the examples for some other examples of
 how authentication and authorization routes are set up per friend's config.
+
+
+## Documentation [&#x219F;](#contents)
+
+`friend-oauth2` API Reference docs:
+ * [API Reference](http://clojusc.github.io/friend-oauth2/current/)
 
 
 ## Contributing/Testing [&#x219F;](#contents)
