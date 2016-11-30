@@ -111,11 +111,11 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [oauth2 site]: https://oauth.net/2/
 [oauth2 rfc]: https://tools.ietf.org/html/rfc6749
 [friend url]: https://github.com/cemerick/friend
-[friend oauth2 examples]: https://github.com/ddellacosta/friend-oauth2-examples
+[friend oauth2 examples]: https://github.com/clojusc/friend-oauth2-examples
 [app.net's OAuth2]: https://github.com/appdotnet/api-spec/blob/master/auth.md
 [Facebook's auth]: https://developers.facebook.com/docs/authentication/server-side/
 [Github's OAuth2]: http://developer.github.com/v3/oauth/
-[docs]: https://github.com/ddellacosta/friend-oauth2/wiki
+[docs]: https://github.com/clojusc/friend-oauth2/wiki
 [Dave Della Costa's version]: https://github.com/ddellacosta/friend-oauth2/
 [0.1.3-transitional]: https://github.com/clojusc/friend-oauth2/releases/tag/0.1.3-transitional
 
@@ -125,7 +125,7 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [deps-badge]: http://jarkeeper.com/clojusc/friend-oauth2/status.svg
 [logo]: resources/images/friend-oauth-logo-x250.png
 [logo-large]: resources/images/friend-oauth-logo-x1000.png
-[tag-badge]: https://img.shields.io/github/tag/clojusc/friend-oauth2.svg?maxAge=2592000
+[tag-badge]: https://img.shields.io/github/tag/clojusc/friend-oauth2.svg
 [tag]: https://github.com/clojusc/friend-oauth2/tags
 [clojure-v]: https://img.shields.io/badge/Clojure-1.5+-blue.svg
 [project]: https://github.com/clojusc/friend-oauth2/blob/master/project.clj
