@@ -1,3 +1,4 @@
+(defproject clojusc/friend-oauth2 "0.2.0-SNAPSHOT"
   :description "OAuth2 workflow for Friend"
   :url "https://github.com/clojusc/friend-oauth2"
   :license {
