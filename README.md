@@ -14,9 +14,7 @@
 
 * [Latest Release](#latest-release-)
 * [Introduction](#introduction-)
-* [Installation and Usage](#installation-and-usage-)
 * [Documentation](#documentation-)
-* [Contributing/Testing](#contributingtesting-)
 * [License](#license-)
 
 
@@ -25,7 +23,7 @@
 Current version on [clojars][clojars]:
 
 ```clojure
-[friend-oauth2 "0.1.5"]
+[clojusc/friend-oauth2 "0.2.0"]
 ```
 
 
@@ -60,52 +58,20 @@ a convenience to developers that wish to switch to the new, supported org for
 this time.
 
 
-### 0.1.4
+### 0.2.0
 
-Dave made a series of changes and brought in PRs when he was still maintaining
-the project that hadn't gotten a release -- those are included in 0.1.4. Also,
-there were some community contributions made after that time that have also
-been pulled in.
-
-
-### 0.1.5
-
-When Clojusc took over maintenance of `friend-oauth2`, one of the things we
-wanted to do was run CI tasks against several versions of the JVM as well as
-Clojure itself. 0.1.5 introduces this capability in Travis CI with a new build
-matrix.
-
-
-
-## Installation and Usage [&#x219F;](#contents)
-
-Please see the [detailed documentation in the wiki][docs] that
-[pjlegato](https://github.com/pjlegato) wrote for details on configuration.
-
-For some more examples, please check out the
-[friend-oauth2 examples][friend oauth2 examples]. Also please refer to the
-[Friend README][friend url].
-
-Check out the ring-app handlers in the examples for some other examples of
-how authentication and authorization routes are set up per friend's config.
+This release integrates the wiki documentation, the Codox docs, and the README.
 
 
 ## Documentation [&#x219F;](#contents)
 
-`friend-oauth2` API Reference docs:
- * [API Reference](http://clojusc.github.io/friend-oauth2/current/)
+Published `friend-oauth2` documentation:
+ * [current version](http://clojusc.github.io/friend-oauth2/current/)
 
+Other versions are also availabel there (see the "Other Versions" topic).
 
-## Contributing/Testing [&#x219F;](#contents)
-
-Bug reports and pull requests are most welcome.  There are outstanding issues
-that I could use development help with if you are interested in contributing.
-If you find a critical bug I will do my best to take care of it quickly, and
-of course in this case as well a pull request is most welcome.
-
-friend-oauth2 uses Midje (https://github.com/marick/Midje) for testing.  You
-can run all the tests by starting up a repl, running `use 'midje.repl` and
-running `autotest`, or run `lein with-profile test midje` on the command line.
+In additoin to generated documentation, the docs at that link also include
+usasge, configuration, and testing instructions, among other topics.
 
 
 ## License [&#x219F;](#contents)
