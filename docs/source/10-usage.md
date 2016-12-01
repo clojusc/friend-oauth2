@@ -6,8 +6,7 @@
 In project.clj:
 
 ```clojure
-[com.cemerick/friend "0.2.0"]
-[friend-oauth2 "0.1.1"]
+[clojusc/friend-oauth2 "0.2.0"]
 ```
 As a security best practice, it is
 strongly recommended that you use
