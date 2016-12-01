@@ -23,7 +23,7 @@
 Current version on [clojars][clojars]:
 
 ```clojure
-[friend-oauth2 "0.2.0"]
+[clojusc/friend-oauth2 "0.2.0"]
 ```
 
 
@@ -68,10 +68,10 @@ This release integrates the wiki documentation, the Codox docs, and the README.
 Published `friend-oauth2` documentation:
  * [current version](http://clojusc.github.io/friend-oauth2/current/)
 
- Other versions are also availabel there (see the "Other Versions" topic).
+Other versions are also availabel there (see the "Other Versions" topic).
 
- In additoin to generated documentation, the docs at that link also include
- usasge, configuration, and testing instructions, among other topics.
+In additoin to generated documentation, the docs at that link also include
+usasge, configuration, and testing instructions, among other topics.
 
 
 ## License [&#x219F;](#contents)
