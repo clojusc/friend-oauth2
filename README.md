@@ -60,21 +60,9 @@ a convenience to developers that wish to switch to the new, supported org for
 this time.
 
 
-### 0.1.4
+### 0.2.0
 
-Dave made a series of changes and brought in PRs when he was still maintaining
-the project that hadn't gotten a release -- those are included in 0.1.4. Also,
-there were some community contributions made after that time that have also
-been pulled in.
-
-
-### 0.1.5
-
-When Clojusc took over maintenance of `friend-oauth2`, one of the things we
-wanted to do was run CI tasks against several versions of the JVM as well as
-Clojure itself. 0.1.5 introduces this capability in Travis CI with a new build
-matrix.
-
+This release integrates the wiki documentation, the Codox docs, and the README.
 
 
 ## Installation and Usage [&#x219F;](#contents)
