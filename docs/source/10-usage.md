@@ -176,21 +176,24 @@ then add the Friend handler to your Ring stack:
 
 ## 8) Add restrictions to your routes and handlers
 
-Access control is performed by Friend as usual. See [Friend's docs][1] for the full details.
+Access control is performed by Friend as usual. See [Friend's docs][1] for the
+full details.
 
-For example, to allow access to a certain Compojure route only to users who are logged in and have the `::oauth2-user` role:
+For example, to allow access to a certain Compojure route only to users who
+are logged in and have the `::oauth2-user` role:
 
 ```clojure
 (GET "/authlink" request
   (friend/authorize #{::oauth2-user} "Authorized page."))
 ```
 
-Or, you can protect an entire Ring substack with Friend's `wrap-authorize` function:
+Or, you can protect an entire Ring substack with Friend's `wrap-authorize`
+function:
 
 ```clojure
   (friend/wrap-authorize admin-routes #{::administrator})
 ```
 
 
-Check out the [friend-oauth2 examples][2] and refer to the [Friend README][1] for more information.
-
+Check out the [friend-oauth2 examples][2] and refer to the [Friend README][1]
+for more information.
