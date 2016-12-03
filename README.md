@@ -1,8 +1,9 @@
 # friend-oauth2
+
 [![Build Status][travis-badge]][travis]
 [![Dependencies Status][deps-badge]][deps]
 [![Clojars Project][clojars-badge]][clojars]
-[![Clojure version][clojure-v]](project.clj)
+[![Clojure version][clojure-v]][project]
 
 *OAuth2 workflow for Clojure/Ring friend framework*
 
@@ -11,11 +12,19 @@
 
 #### Contents
 
-* [Introduction](#introduction-)
 * [Latest Release](#latest-release-)
-* [Installation and Usage](#installation-and-usage-)
-* [Contributing/Testing](#contributingtesting-)
+* [Introduction](#introduction-)
+* [Documentation](#documentation-)
 * [License](#license-)
+
+
+## Latest Release [&#x219F;](#contents)
+
+Current version on [clojars][clojars]:
+
+```clojure
+[clojusc/friend-oauth2 "0.2.0"]
+```
 
 
 ## Introduction [&#x219F;](#contents)
@@ -27,43 +36,50 @@ implemented for [app.net's OAuth2][app.net's OAuth2],
 [Github's OAuth2][Github's OAuth2].
 
 
-## Latest Release [&#x219F;](#contents)
+### New Maintainer!
 
-Current version on [clojars][clojars]:
+**Where is [Dave Della Costa's version][Dave Della Costa's version]?** It's here!
+The clojusc org is the new maintainer for `friend-oauth2`. However, there is
+more to that answer, if you are asking about versions of releases:
 
-```clojure
-[clojusc/friend-oauth2 "0.1.5"]
-```
-
-
-## Installation and Usage [&#x219F;](#contents)
-
-Please see the [detailed documentation in the wiki][docs] that
-[pjlegato](https://github.com/pjlegato) wrote for details on configuration.
-
-For some more examples, please check out the
-[friend-oauth2 examples][friend oauth2 examples]. Also please refer to the
-[Friend README][friend url].
-
-Check out the ring-app handlers in the examples for some other examples of
-how authentication and authorization routes are set up per friend's config.
+* Dave's releases of `friend-oauth2` are here, everything 0.1.3 and below:
+  https://github.com/clojusc/friend-oauth2/releases
+* Clojusc releases of `friend-oauth2`: https://clojars.org/clojusc/friend-oauth2
 
 
-## Contributing/Testing [&#x219F;](#contents)
+### 0.1.3 & 0.1.3-transitional
 
-Bug reports and pull requests are most welcome.  There are outstanding issues
-that I could use development help with if you are interested in contributing.
-If you find a critical bug I will do my best to take care of it quickly, and
-of course in this case as well a pull request is most welcome.
+What's more, the Clojuse 0.1.3 release of `friend-oauth2` is exactly the same as
+Dave's 0.1.3 release, with the exception that the group ID has been changed to
+`clojusc`. All the code, all of the deps, etc., are exactly the same. This is
+tagged in Github as [0.1.3-transitional][0.1.3-transitional]. This is provided as
+a convenience to developers that wish to switch to the new, supported org for
+`friend-oauth2`, but don't want to take on any burdens of upgrade maintenance at
+this time.
 
-friend-oauth2 uses Midje (https://github.com/marick/Midje) for testing.  You
-can run all the tests by starting up a repl, running `use 'midje.repl` and
-running `autotest`, or run `lein with-profile test midje` on the command line.
+
+### 0.2.0
+
+This release integrates the wiki documentation, the Codox docs, the README, and
+the examples from the previously separate friend-oauth2-examples repo.
+
+
+## Documentation [&#x219F;](#contents)
+
+Published `friend-oauth2` documentation:
+ * [current version](http://clojusc.github.io/friend-oauth2/current/)
+
+Other versions are also available there (see the "Other Versions" topic).
+
+In addition to generated documentation, the docs at that link also include
+usage, configuration, and testing instructions, among other topics.
 
 
 ## License [&#x219F;](#contents)
 
 Copyright © 2012-2016, Dave Della Costa
+
+Copyright © 2016, Clojure-Aided Enrichment Center
 
 Distributed under the MIT License (http://dd.mit-license.org/)
 
@@ -75,6 +91,8 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [Facebook's auth]: https://developers.facebook.com/docs/authentication/server-side/
 [Github's OAuth2]: http://developer.github.com/v3/oauth/
 [docs]: https://github.com/clojusc/friend-oauth2/wiki
+[Dave Della Costa's version]: https://github.com/ddellacosta/friend-oauth2/
+[0.1.3-transitional]: https://github.com/clojusc/friend-oauth2/releases/tag/0.1.3-transitional
 
 [travis]: https://travis-ci.org/clojusc/friend-oauth2
 [travis-badge]: https://travis-ci.org/clojusc/friend-oauth2.png?branch=master
@@ -82,8 +100,10 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [deps-badge]: http://jarkeeper.com/clojusc/friend-oauth2/status.svg
 [logo]: resources/images/friend-oauth-logo-x250.png
 [logo-large]: resources/images/friend-oauth-logo-x1000.png
-[tag-badge]: https://img.shields.io/github/tag/clojusc/friend-oauth2.svg?maxAge=2592000
+[tag-badge]: https://img.shields.io/github/tag/clojusc/friend-oauth2.svg
 [tag]: https://github.com/clojusc/friend-oauth2/tags
 [clojure-v]: https://img.shields.io/badge/clojure-1.5+-blue.svg
+[project]: https://github.com/clojusc/friend-oauth2/blob/master/project.clj
 [clojars]: https://clojars.org/clojusc/friend-oauth2
 [clojars-badge]: https://img.shields.io/clojars/v/clojusc/friend-oauth2.svg
+
