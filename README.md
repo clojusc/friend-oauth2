@@ -60,7 +60,8 @@ this time.
 
 ### 0.2.0
 
-This release integrates the wiki documentation, the Codox docs, and the README.
+This release integrates the wiki documentation, the Codox docs, the README, and
+the examples from the previously separate friend-oauth2-examples repo.
 
 
 ## Documentation [&#x219F;](#contents)
