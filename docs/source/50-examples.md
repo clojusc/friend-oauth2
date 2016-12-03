@@ -1,4 +1,4 @@
-# friend-oauth2 Examples
+# Examples
 
 The friend-oauth2 project includes the following examples:
 
