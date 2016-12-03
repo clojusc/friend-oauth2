@@ -50,6 +50,7 @@
         [org.clojure/tools.namespace "0.2.11"
           :exclusions [org.clojure/clojure]]]}
     :docs {
+      :dependencies [[codox-theme-rdash "0.1.1"]]
       :plugins [[lein-codox "0.10.2"]
                 [lein-simpleton "1.3.0"]]
       :codox {
@@ -57,6 +58,7 @@
           :name "friend-oauth2"
           :description "OAuth2 workflow for Friend"}
         :namespaces [#"^friend-oauth2\.(?!dev)"]
+        :themes [:rdash]
         :output-path "docs/master/current"
         :doc-paths ["docs/source"]
         :metadata {
