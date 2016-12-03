@@ -50,6 +50,7 @@
         [org.clojure/tools.namespace "0.2.11"
           :exclusions [org.clojure/clojure]]]}
     :docs {
+      :dependencies [[codox-theme-rdash "0.1.1"]]
       :plugins [[lein-codox "0.10.2"]
                 [lein-simpleton "1.3.0"]]
       :codox {
@@ -57,8 +58,27 @@
           :name "friend-oauth2"
           :description "OAuth2 workflow for Friend"}
         :namespaces [#"^friend-oauth2\.(?!dev)"]
+        :themes [:rdash]
         :output-path "docs/master/current"
         :doc-paths ["docs/source"]
         :metadata {
           :doc/format :markdown
-          :doc "Documentation forthcoming"}}}})
+          :doc "Documentation forthcoming"}}}
+    :examples {
+      :source-paths ["examples"]
+      :dependencies [
+        [cheshire "5.6.3"]
+        [com.cemerick/url "0.1.1"]
+        [compojure "1.5.1"]
+        [http-kit "2.2.0"]
+        [ring-logger "0.7.6"]
+        [ring/ring-defaults "0.3.0-beta1"]]}
+    :appdotnet {:main friend-oauth2.examples.appdotnet}
+    :facebook {:main friend-oauth2.examples.facebook}
+    :github {:main friend-oauth2.examples.github}
+    :google {:main friend-oauth2.examples.google}}
+    :aliases {
+      "facebook" ["trampoline" "with-profile" "+clj18,+examples,+facebook" "run"]
+      "appdotnet" ["trampoline" "with-profile" "+clj18,+examples,+appdotnet" "run"]
+      "github" ["trampoline" "with-profile" "+clj18,+examples,+github" "run"]
+      "google" ["trampoline" "with-profile" "+clj18,+examples,+google" "run"]})

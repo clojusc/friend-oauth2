@@ -68,17 +68,17 @@ This release integrates the wiki documentation, the Codox docs, and the README.
 Published `friend-oauth2` documentation:
  * [current version](http://clojusc.github.io/friend-oauth2/current/)
 
-Other versions are also availabel there (see the "Other Versions" topic).
+Other versions are also available there (see the "Other Versions" topic).
 
-In additoin to generated documentation, the docs at that link also include
-usasge, configuration, and testing instructions, among other topics.
+In addition to generated documentation, the docs at that link also include
+usage, configuration, and testing instructions, among other topics.
 
 
 ## License [&#x219F;](#contents)
 
 Copyright © 2012-2016, Dave Della Costa
 
-Copyright © 2016, Clojure-Aided Enrinchment Center
+Copyright © 2016, Clojure-Aided Enrichment Center
 
 Distributed under the MIT License (http://dd.mit-license.org/)
 
