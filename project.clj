@@ -1,4 +1,4 @@
-(defproject clojusc/friend-oauth2 "0.2.0-SNAPSHOT"
+(defproject clojusc/friend-oauth2 "0.2.0"
   :description "OAuth2 workflow for Friend"
   :url "https://github.com/clojusc/friend-oauth2"
   :license {
@@ -78,7 +78,7 @@
     :github {:main friend-oauth2.examples.github}
     :google {:main friend-oauth2.examples.google}}
     :aliases {
-      "facebook" ["trampoline" "with-profile" "+clj18,+examples,+facebook" "run"]
       "appdotnet" ["trampoline" "with-profile" "+clj18,+examples,+appdotnet" "run"]
+      "facebook" ["trampoline" "with-profile" "+clj18,+examples,+facebook" "run"]
       "github" ["trampoline" "with-profile" "+clj18,+examples,+github" "run"]
       "google" ["trampoline" "with-profile" "+clj18,+examples,+google" "run"]})
