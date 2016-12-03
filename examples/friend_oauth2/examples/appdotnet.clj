@@ -1,4 +1,4 @@
-(ns friend-oauth2-examples.appdotnet-handler
+(ns friend-oauth2.examples.appdotnet
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]

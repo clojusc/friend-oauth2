@@ -1,4 +1,4 @@
-(ns friend-oauth2-examples.github-handler
+(ns friend-oauth2.examples.github
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
@@ -64,7 +64,7 @@
                 " times.</p><p>The current session: " session "</p>"))
          (assoc :session session))))
 
-(defn render-repos-page 
+(defn render-repos-page
   "Shows a list of the current users github repositories by calling the github api
    with the OAuth2 access token that the friend authentication has retrieved."
   [request]
@@ -73,7 +73,7 @@
         repos-response (get-github-repos access-token)]
     (str (vec (map :name repos-response)))))
 
-(defn get-github-repos 
+(defn get-github-repos
   "Github API call for the current authenticated users repository list."
   [access-token]
   (let [url (str "https://api.github.com/user/repos?access_token=" access-token)

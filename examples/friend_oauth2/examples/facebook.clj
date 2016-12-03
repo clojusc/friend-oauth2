@@ -1,11 +1,10 @@
-(ns friend-oauth2-examples.google-handler
+(ns friend-oauth2.examples.facebook
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
             [cemerick.friend :as friend]
             [friend-oauth2.workflow :as oauth2]
-            [friend-oauth2.util :refer [format-config-uri]]
-            [cheshire.core :as j]
+            [friend-oauth2.util :refer [format-config-uri get-access-token-from-params]]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
 
@@ -17,19 +16,16 @@
 (def client-config
   {:client-id ""
    :client-secret ""
-   :callback {:domain "http://example.com" :path "/oauth2callback"}})
+   :callback {:domain "http://example.com" :path "/facebook.callback"}})
 
 (def uri-config
-  {:authentication-uri {:url "https://accounts.google.com/o/oauth2/auth"
-                       :query {:client_id (:client-id client-config)
-                               :response_type "code"
-                               :redirect_uri (format-config-uri client-config)
-                               :scope "email"}}
+  {:authentication-uri {:url "https://www.facebook.com/dialog/oauth"
+                        :query {:client_id (:client-id client-config)
+                                :redirect_uri (format-config-uri client-config)}}
 
-   :access-token-uri {:url "https://accounts.google.com/o/oauth2/token"
+   :access-token-uri {:url "https://graph.facebook.com/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
-                              :grant_type "authorization_code"
                               :redirect_uri (format-config-uri client-config)}}})
 
 (defroutes ring-app
@@ -57,4 +53,5 @@
      :workflows [(oauth2/workflow
                   {:client-config client-config
                    :uri-config uri-config
+                   :access-token-parsefn get-access-token-from-params
                    :credential-fn credential-fn})]})))
