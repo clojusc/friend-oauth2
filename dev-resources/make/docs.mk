@@ -20,7 +20,10 @@ pre-docs:
 	@echo "\nBuilding docs ...\n"
 
 clojure-docs:
-	@lein with-profile +docs codox
+	@OAUTH2_CLIENT_ID=clientid \
+	OAUTH2_CLIENT_SECRET=clientsecret \
+	OAUTH2_CALLBACK_URL=http://localhost:8999/process-token \
+	lein with-profile +docs,+examples codox
 
 local-docs: pre-docs clojure-docs
 
