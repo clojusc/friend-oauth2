@@ -3,13 +3,7 @@
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
             [friend-oauth2.util :as util]
-            [ring.util.request :as request]
-            [schema.core :as s]))
-
-(s/defschema ClientConfig {:client-id String
-                           :client-secret String
-                           :callback {:domain String
-                                      :path String}})
+            [ring.util.request :as request]))
 
 (defn- default-credential-fn
   [creds]

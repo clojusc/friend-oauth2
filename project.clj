@@ -13,7 +13,6 @@
     [ring/ring-codec "1.0.1"]
     [ring/ring-jetty-adapter "1.6.0-beta6"]
     [clj-http "3.4.1"]
-    [prismatic/schema "1.1.3"]
     [clojusc/twig "0.3.0"]
     [crypto-random "1.2.0"]]
   :profiles {

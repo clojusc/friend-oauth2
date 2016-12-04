@@ -53,7 +53,8 @@ with the  following `lein` aliases:
 ## Source Code
 
 We keep the example source code as part of the code in this repository:
- * [examples/friend_oauth2/examples][example source code]
+
+* [examples/friend_oauth2/examples][example source code]
 
 However, we also recognize that it's nice to see an example in the
 documentation itself, so we'll take on the burden of maintaining the following
