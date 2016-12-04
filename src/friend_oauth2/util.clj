@@ -1,9 +1,30 @@
 (ns friend-oauth2.util
-  (:require [clojure.data.json :as json]
+  (:require [cemerick.url :as url]
+            [clojure.data.json :as json]
             [clojure.string :as string]
             [clojure.tools.logging :as log]
             [crypto.random :as random]
             [ring.util.codec :as ring-codec]))
+
+(defn get-domain
+  "From a parsed URL object, construct a domain string."
+  [parsed-url]
+  (let [port (:port parsed-url)]
+    (if port
+      (format "%s://%s:%s"
+                (:protocol parsed-url)
+                (:host parsed-url)
+                port)
+      (format "%s://%s"
+                (:protocol parsed-url)
+                (:host parsed-url)))))
+
+(defn parse-url
+  "Parse a URL into the two parts needed by legacy `friend-oauth2` code."
+  [uri]
+  (let [parsed-url (url/url uri)
+        domain (get-domain parsed-url)]
+    [domain (:path parsed-url)]))
 
 (defn format-config-uri
   "Formats URI from domain and path pairs in a map"

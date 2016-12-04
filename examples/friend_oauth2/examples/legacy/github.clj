@@ -1,26 +1,41 @@
-(ns friend-oauth2.examples.github
+(ns friend-oauth2.examples.legacy.github
   (:require [cemerick.friend :as friend]
             [cemerick.friend [workflows :as workflows]
                              [credentials :as creds]]
+            [cemerick.url :as url]
             [clj-http.client :as client]
             [clojure.data.json :as json]
             [clojusc.twig :as logger]
             [compojure.core :as compojure :refer [GET ANY defroutes]]
             [compojure.handler :as handler]
-            [friend-oauth2.config :as config]
             [friend-oauth2.workflow :as oauth2]
             [friend-oauth2.util :as util]
             [org.httpkit.server :as server])
   (:gen-class))
 
-(def cfg
-  (config/client
-    :scope "user"
-    :auth-uri "https://github.com/login/oauth/authorize"
-    :token-uri "https://github.com/login/oauth/access_token"))
+(def callback-url (System/getenv "OAUTH2_CALLBACK_URL"))
+(def parsed-url (url/url callback-url))
 
-(def client-config (config/->client-cfg cfg))
-(def uri-config (config/->uri-cfg cfg))
+(def client-config
+  {:client-id (System/getenv "OAUTH2_CLIENT_ID")
+   :client-secret (System/getenv "OAUTH2_CLIENT_SECRET")
+   :callback {:domain (format "%s://%s:%s"
+                        (:protocol parsed-url)
+                        (:host parsed-url)
+                        (:port parsed-url))
+              :path (:path parsed-url)}})
+
+(def uri-config
+  {:authentication-uri {:url "https://github.com/login/oauth/authorize"
+                        :query {:client_id (:client-id client-config)
+                                :response_type "code"
+                                :redirect_uri callback-url
+                                :scope "user"}}
+   :access-token-uri {:url "https://github.com/login/oauth/access_token"
+                      :query {:client_id (:client-id client-config)
+                              :client_secret (:client-secret client-config)
+                              :grant_type "authorization_code"
+                              :redirect_uri callback-url}}})
 
 (defn get-authentications
   [request]

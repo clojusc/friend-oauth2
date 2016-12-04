@@ -83,11 +83,9 @@ Note that if the `:client-id`, `:client-secret`, and `:redirect-uri` arguments
 are not proivded, they are taken from the `OAUTH2_CLIENT_ID`,
 `OAUTH2_CLIENT_SECRET`, and `OAUTH2_CALLBACK_URL` environment variables.
 
-The `Client` record defines the following
-fields:
+The `Client` record defines the following authentication fields:
 
 * `client-id`
-* `client-secret`
 * `redirect-uri`
 * `response-type`
 * `scope`
@@ -96,10 +94,17 @@ fields:
 * `prompt`
 * `login-hint`
 * `include-granted-scopes`
-* `code`
-* `grant-type`
 * `adnview`
 * `allow-signup`
+
+combined with the following token access fields:
+
+* `client-secret`
+* `code`
+* `grant-type`
+
+and the following service configuration fields:
+
 * `auth-uri`
 * `token-uri`
 
