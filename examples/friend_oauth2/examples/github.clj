@@ -1,7 +1,7 @@
 (ns friend-oauth2.examples.github
   (:require [cemerick.friend :as friend]
-            [cemerick.friend [workflows :as workflows]
-                             [credentials :as creds]]
+            [cemerick.friend.workflows :as workflows]
+            [cemerick.friend.credentials :as creds]
             [clj-http.client :as client]
             [clojure.data.json :as json]
             [clojusc.twig :as logger]

@@ -1,11 +1,9 @@
 (ns friend-oauth2.examples.google
   (:require [cemerick.friend :as friend]
-            [cemerick.friend [workflows :as workflows]
-                             [credentials :as creds]]
-            [cheshire.core :as json]
+            [cemerick.friend.workflows :as workflows]
+            [cemerick.friend.credentials :as creds]
             [compojure.core :as compojure :refer [GET ANY defroutes]]
             [compojure.handler :as handler]
-            [compojure.route :as route]
             [friend-oauth2.config :as config]
             [friend-oauth2.workflow :as oauth2]
             [friend-oauth2.util :as util]
