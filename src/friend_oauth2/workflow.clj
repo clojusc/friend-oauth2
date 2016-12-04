@@ -60,7 +60,7 @@
 (s/defn ^:always-validate workflow
   "Workflow for OAuth2"
   [config :- {(s/required-key :client-config) ClientConfig
-               s/Any s/Any}];; The rest of config.
+               s/Any s/Any}] ;; The rest of config.
   (fn [request]
     (when (is-oauth2-callback? config request)
       ;; Extracts code from request if we are getting here via OAuth2 callback.
