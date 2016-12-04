@@ -34,7 +34,7 @@
         token-parse-fn   (or access-token-parsefn util/extract-access-token)]
     (log/debug "Requesting token ...")
     (log/debug "access-token-uri:" access-token-uri)
-    (log/debug "query-map:" query-map)
+    (log/trace "query-map:" query-map)
     (token-parse-fn
       (client/post (:url access-token-uri)
                    {:form-params query-map
