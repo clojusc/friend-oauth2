@@ -34,4 +34,9 @@ This release integrates the wiki documentation, the Codox docs, the README, and
 the examples from the previously separate friend-oauth2-examples repo.
 
 
+## 0.3.0
+
+TBD
+
+
 [0.1.3-transitional]: https://github.com/clojusc/friend-oauth2/releases/tag/0.1.3-transitional

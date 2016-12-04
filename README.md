@@ -60,8 +60,15 @@ this time.
 
 ### 0.2.0
 
-This release integrates the wiki documentation, the Codox docs, the README, and
-the examples from the previously separate friend-oauth2-examples repo.
+The 0.2.0 release integrated the wiki documentation, the Codox docs, the README,
+and the examples from the previously separate friend-oauth2-examples repo.
+
+
+### 0.3.0
+
+TBD
+
+For the complete change history, see the [documentation page][change history].
 
 
 ## Documentation [&#x219F;](#contents)
@@ -93,6 +100,7 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [docs]: https://github.com/clojusc/friend-oauth2/wiki
 [Dave Della Costa's version]: https://github.com/ddellacosta/friend-oauth2/
 [0.1.3-transitional]: https://github.com/clojusc/friend-oauth2/releases/tag/0.1.3-transitional
+[change history]: http://clojusc.github.io/friend-oauth2/current/80-change-history.html
 
 [travis]: https://travis-ci.org/clojusc/friend-oauth2
 [travis-badge]: https://travis-ci.org/clojusc/friend-oauth2.png?branch=master
