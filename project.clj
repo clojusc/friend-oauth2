@@ -8,6 +8,7 @@
     [org.clojure/data.json "0.2.6"]
     [com.cemerick/friend "0.2.3"
       :exclusions [org.apache.httpcomponents/httpclient]]
+    [com.cemerick/url "0.1.1"]
     [ring "1.6.0-beta6"]
     [ring/ring-codec "1.0.1"]
     [ring/ring-jetty-adapter "1.6.0-beta6"]
@@ -68,7 +69,6 @@
       :source-paths ["examples"]
       :dependencies [
         [cheshire "5.6.3"]
-        [com.cemerick/url "0.1.1"]
         [compojure "1.5.1"]
         [http-kit "2.2.0"]
         [ring-logger "0.7.6"]
@@ -76,9 +76,17 @@
     :appdotnet {:main friend-oauth2.examples.appdotnet}
     :facebook {:main friend-oauth2.examples.facebook}
     :github {:main friend-oauth2.examples.github}
-    :google {:main friend-oauth2.examples.google}}
+    :google {:main friend-oauth2.examples.google}
+    :legacy-appdotnet {:main friend-oauth2.examples.legacy.appdotnet}
+    :legacy-facebook {:main friend-oauth2.examples.legacy.facebook}
+    :legacy-github {:main friend-oauth2.examples.legacy.github}
+    :legacy-google {:main friend-oauth2.examples.legacy.google}}
     :aliases {
       "appdotnet" ["trampoline" "with-profile" "+clj18,+examples,+appdotnet" "run"]
       "facebook" ["trampoline" "with-profile" "+clj18,+examples,+facebook" "run"]
       "github" ["trampoline" "with-profile" "+clj18,+examples,+github" "run"]
-      "google" ["trampoline" "with-profile" "+clj18,+examples,+google" "run"]})
+      "google" ["trampoline" "with-profile" "+clj18,+examples,+google" "run"]
+      "legacy-appdotnet" ["trampoline" "with-profile" "+clj18,+examples,+legacy-appdotnet" "run"]
+      "legacy-facebook" ["trampoline" "with-profile" "+clj18,+examples,+legacy-facebook" "run"]
+      "legacy-github" ["trampoline" "with-profile" "+clj18,+examples,+legacy-github" "run"]
+      "legacy-google" ["trampoline" "with-profile" "+clj18,+examples,+legacy-google" "run"]})
