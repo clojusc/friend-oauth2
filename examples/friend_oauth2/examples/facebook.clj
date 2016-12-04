@@ -7,6 +7,7 @@
             [compojure.handler :as handler]
             [compojure.route :as route]
             [cemerick.friend :as friend]
+            [friend-oauth2.config :as config]
             [friend-oauth2.workflow :as oauth2]
             [friend-oauth2.util :as util]
             [org.httpkit.server :as server])
