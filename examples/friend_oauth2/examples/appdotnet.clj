@@ -30,7 +30,6 @@
                                 :response_type "code"
                                 :redirect_uri callback-url
                                 :scope "stream,email"}}
-
    :access-token-uri {:url "https://account.app.net/oauth/access_token"
                       :query {:client_id (:client-id client-config)
                               :client_secret (:client-secret client-config)
@@ -64,12 +63,15 @@
   ;;lookup token in DB or whatever to fetch appropriate :roles
   {:identity token :roles #{::user}})
 
+(def workflow
+  (oauth2/workflow
+    {:client-config client-config
+     :uri-config uri-config
+     :credential-fn credential-fn}))
+
 (def auth-opts
   {:allow-anon? true
-   :workflows [(oauth2/workflow
-                {:client-config client-config
-                 :uri-config uri-config
-                 :credential-fn credential-fn})]})
+   :workflows [workflow]})
 
 (def app
   (-> app-routes
