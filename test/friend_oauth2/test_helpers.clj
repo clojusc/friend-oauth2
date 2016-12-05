@@ -7,7 +7,7 @@
    [friend-oauth2.workflow :as oauth2]
    [cemerick.friend :as friend]
    [cemerick.url :refer [url]]
-   [compojure.handler :as handler]
+   [ring.middleware.defaults :as ring-defaults]
    [ring.util.response :refer [get-header]]
    [ring.mock.request :as ring-mock]))
 
@@ -16,7 +16,10 @@
   [response]
   (let [cookie-header (get-header response "Set-Cookie")
         cookie-strs   (-> cookie-header first (split #";"))]
-    (into {} (map #(split % #"=") cookie-strs))))
+    (->> cookie-strs
+         (map #(clojure.string/split % #"="))
+         (map #(if (= (count %) 2) % (conj % true)))
+         (into {}))))
 
 (defn extract-ring-session-val
   "Returns ring-session value from Set-Cookie
@@ -54,19 +57,24 @@
   (GET "/authlink" request
        (friend/authorize #{::user} "Authorized page.")))
 
+(def workflow
+  (oauth2/workflow
+    {:client-config client-config-fixture
+     :uri-config uri-config-fixture
+     :auth-error-fn (fn [error]
+                      (ring.util.response/response error))
+     :credential-fn (fn [token]
+                      {:identity token
+                       :roles #{::user}})}))
+
+(def auth-opts
+  {:allow-anon? true
+   :workflows [workflow]})
+
 (def test-app
-  (handler/site
-   (friend/authenticate
-    test-app-routes
-    {:allow-anon? true
-     :workflows [(oauth2/workflow
-                  {:client-config client-config-fixture
-                   :uri-config uri-config-fixture
-                   :auth-error-fn (fn [error]
-                                    (ring.util.response/response error))
-                   :credential-fn (fn [token]
-                                    {:identity token
-                                     :roles #{::user}})})]})))
+  (-> test-app-routes
+      (friend/authenticate auth-opts)
+      (ring-defaults/wrap-defaults ring-defaults/site-defaults)))
 
 (defn setup-valid-state
   "Initiates login to provide valid state for later requests.

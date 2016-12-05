@@ -61,82 +61,83 @@ documentation itself, so we'll take on the burden of maintaining the following
 text in the effort to provide a good docs experience for you :-)
 
 
-Here's the Github `friend-oauth2` example, runable from the commandline
-(with `lein`, `java`, etc.):
+Here's the Google `friend-oauth2` example, runable from the commandline
+(e.g., with `lein`):
 
 ```clj
-(ns friend-oauth2.examples.github
+(ns friend-oauth2.examples.google
   (:require [cemerick.friend :as friend]
             [cemerick.friend.workflows :as workflows]
             [cemerick.friend.credentials :as creds]
-            [clj-http.client :as client]
-            [clojure.data.json :as json]
+            [clojure.tools.logging :as log]
             [clojusc.twig :as logger]
             [compojure.core :as compojure :refer [GET ANY defroutes]]
-            [compojure.handler :as handler]
-            [friend-oauth2.config :as config]
-            [friend-oauth2.workflow :as oauth2]
+            [friend-oauth2.service.google :as google]
             [friend-oauth2.util :as util]
-            [org.httpkit.server :as server])
+            [org.httpkit.server :as server]
+            [ring.util.response :as response]
+            [ring.middleware.defaults :as ring-defaults])
   (:gen-class))
 
-(defn get-authentications
-  [request]
-  (get-in request [:session :cemerick.friend/identity :authentications]))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Mini Webapp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn get-token
-  ([request]
-    (get-token request 0))
-  ([request index]
-    (let [authentications (get-authentications request)]
-      (:access-token (nth (keys authentications) index)))))
+(defn html
+  [content]
+  (-> content
+      (response/response)
+      (response/header "Content-Type" "text/html")))
 
-(defn render-status-page [request]
-  (let [count (:count (:session request) 0)
-        session (assoc (:session request) :count (inc count))]
-    (-> (str "<p>We've hit the session page "
-             (:count session)
-             " times.</p><p>The current session: "
-             session
-             "</p>")
-        (ring.util.response/response)
+(def index-content
+  (str "<a href=\"/admin\">Admin Pages</a><br />"
+       "<a href=\"/authlink\">Authorized page</a><br />"
+       "<a href=\"/authlink2\">Authorized page 2</a><br />"
+       "<a href=\"/status\">Status</a><br />"
+       "<a href=\"/logout\">Log out</a>"))
+
+(defn get-status-content
+  [count session]
+  (str "<p>We've hit the session page "
+       count
+       " times.</p><p>The current session: "
+       session
+       "</p>"))
+
+(defn render-index-page
+  [req]
+  (html index-content))
+
+(defn render-status-page
+  [req]
+  (let [count (:count (:session req) 0)
+        session (assoc (:session req) :count (inc count))]
+    (-> (get-status-content count session)
+        (html)
         (assoc :session session))))
 
-(defn get-github-repos
-  "Github API call for the current authenticated users repository list."
-  [access-token]
-  (let [url (str "https://api.github.com/user/repos?access_token=" access-token)
-        response (client/get url {:accept :json})
-        repos (json/read-str (:body response) :key-fn keyword)]
-    repos))
-
-(defn render-repos-page
-  "Shows a list of the current users github repositories by calling the github api
-   with the OAuth2 access token that the friend authentication has retrieved."
-  [request]
-  (let [access-token (get-token request)
-        repos-response (get-github-repos access-token)]
-    (->> repos-response
-         (map :name)
-         (vec)
-         (str))))
-
 (defroutes app-routes
-  (GET "/" request
-    (str "<a href=\"/repos\">My Github Repositories</a><br />"
-         "<a href=\"/status\">Status</a><br />"
-         "<a href=\"/logout\">Log out</a>"))
-  (GET "/status" request
-       (render-status-page request))
-  (GET "/repos" request
-       (friend/authorize #{::user} (render-repos-page request)))
-  (friend/logout (ANY "/logout" request (ring.util.response/redirect "/"))))
+  (GET "/" req
+       (render-index-page req))
+  (GET "/status" req
+       (render-status-page req))
+  (GET "/authlink" req
+       (friend/authorize
+         #{::user}
+         (html "Authorized page.")))
+  (GET "/authlink2" req
+       (friend/authorize
+         #{::user}
+         (html "Authorized page 2.")))
+  (GET "/admin" req
+       (friend/authorize
+         #{::admin}
+         (html "Only admins can see this page.")))
+  (friend/logout (ANY "/logout" req (response/redirect "/"))))
 
-(def cfg
-  (config/client
-    :scope "user"
-    :auth-uri "https://github.com/login/oauth/authorize"
-    :token-uri "https://github.com/login/oauth/access_token"))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; OAuth2 Configuration and Integration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn credential-fn
   [token]
@@ -144,8 +145,8 @@ Here's the Github `friend-oauth2` example, runable from the commandline
   {:identity token :roles #{::user}})
 
 (def workflow
-  (oauth2/workflow
-    {:config cfg
+  (google/workflow
+    {:config {:scope "email"}
      :access-token-parsefn util/get-access-token-from-params
      :credential-fn credential-fn}))
 
@@ -153,13 +154,19 @@ Here's the Github `friend-oauth2` example, runable from the commandline
   {:allow-anon? true
    :workflows [workflow]})
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; App Server ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (def app
   (-> app-routes
       (friend/authenticate auth-opts)
-      (handler/site)))
+      (ring-defaults/wrap-defaults ring-defaults/site-defaults)))
 
 (defn -main
   [& args]
+  (logger/set-level! '[ring friend friend-oauth2] :info)
+  (log/info "Starting example server using Google OAuth2 ...")
   (server/run-server app {:port 8999}))
 ```
 

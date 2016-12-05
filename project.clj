@@ -7,10 +7,16 @@
   :dependencies [
     [org.clojure/data.json "0.2.6"]
     [com.cemerick/friend "0.2.3"
-      :exclusions [org.apache.httpcomponents/httpclient]]
+      :exclusions [clj-time
+                   commons-codec
+                   commons-logging
+                   org.apache.httpcomponents/httpclient
+                   ring/ring-core
+                   slingshot]]
     [com.cemerick/url "0.1.1"]
     [ring "1.6.0-beta6"]
-    [ring/ring-codec "1.0.1"]
+    [ring/ring-defaults "0.3.0-beta1" :exclusions [ring/ring-core]]
+    [ring/ring-codec "1.0.1" :exclusions [commons-codec]]
     [ring/ring-jetty-adapter "1.6.0-beta6"]
     [clj-http "3.4.1"]
     [clojusc/twig "0.3.0"]
@@ -22,18 +28,23 @@
       :dependencies [
         [com.cemerick/url "0.1.1"]
         [compojure "1.6.0-beta1"]
-        [midje "1.8.3"]
-        [ring-mock "0.1.5"]]
+        [midje "1.9.0-alpha6"]
+        [ring/ring-mock "0.3.0"
+          :exclusions [org.clojure/clojure
+                       ring/ring-codec]]]
       :plugins [
-        [lein-midje "3.2.1"]]}
-    :clj15 {
-      :dependencies [
-        [org.clojure/clojure "1.5.0"]
-        [medley "0.6.0" :exclusions [org.clojure/clojure]]]}
-    :clj16 {
-      :dependencies [
-        [org.clojure/clojure "1.6.0"]
-        [medley "0.6.0" :exclusions [org.clojure/clojure]]]}
+        [jonase/eastwood "0.2.3" :exclusions [org.clojure/clojure]]
+        [lein-kibit "0.1.3"]
+        [lein-midje "3.2.1" :exclusions [midje]]]}
+    ;; XXX Reader macros not supported in anything less than Clojure 1.7
+    ;; :clj15 {
+    ;;   :dependencies [
+    ;;     [org.clojure/clojure "1.5.0"]
+    ;;     [medley "0.6.0" :exclusions [org.clojure/clojure]]]}
+    ;; :clj16 {
+    ;;   :dependencies [
+    ;;     [org.clojure/clojure "1.6.0"]
+    ;;     [medley "0.6.0" :exclusions [org.clojure/clojure]]]}
     :clj17 {
       :dependencies [
         [org.clojure/clojure "1.7.0"]]}

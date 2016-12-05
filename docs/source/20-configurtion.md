@@ -141,14 +141,31 @@ facilitated by several configuration utility functions that perform appropriate
 tranformations from the record-based approach.
 
 
-### Sources
+## Service Configuration
+
+If, instead of creating a service configuration from scratch, you chose to use
+one of the [predefined `friend-oauth2` services][predefined services], the
+steps required are fewer and a little bit different.
+
+First of all, you won't call `friend-oauth2.workflow/workflow`; you'll call
+`friend-oauth2.service.<name>/workflow` (e.g.,
+`friend-oauth2.service.github/workflow`).
+
+Secondly, you won't pass a map with `:config` set to an instance of
+`friend-oauth2.config/Client`; you'll pass a map witb `:config` set to a simple
+map data structure with just the bits you need (e.g., `{:scope "user"}`).
+
+This is the approach used in the non-legacy examples.
+
+
+## Configuration Sources
 
 The fields for the record above are the combination of the fields taken from
 the OAuth2 services supported by `friend-oauth2`. Each is covered below in its
 own sub-section.
 
 
-#### App.net
+### App.net
 
 [App.net's OAuth2 service][app.net service] supports the following query
 string parameters for the authorization phase:
@@ -169,7 +186,7 @@ And it supports the following for access code exchange:
 * `grant_type` (value `authorization_code`)
 
 
-#### Facebook
+### Facebook
 
 [Facebook's OAuth2 service][facebook service] supports the following query
 string parameters for the authorization phase:
@@ -189,7 +206,7 @@ And it supports the following for access code exchange:
 * `redirect_uri`
 
 
-#### Github
+### Github
 
 [Github's OAuth2 service][github service] supports the following query
 string parameters for the authorization phase:
@@ -209,7 +226,7 @@ And it supports the following for access code exchange:
 * `state`
 
 
-#### Google
+### Google
 
 [Google's OAuth2 service][google oauth2 service] supports the following query
 string parameters for the authorization phase:
@@ -238,3 +255,4 @@ And it supports the following for access code exchange:
 [facebook service]: https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
 [github service]: https://developer.github.com/v3/oauth/
 [google oauth2 service]: https://developers.google.com/identity/protocols/OAuth2WebServer
+[predefined services]: https://github.com/clojusc/friend-oauth2/tree/master/src/friend_oauth2/service

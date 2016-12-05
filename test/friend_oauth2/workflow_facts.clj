@@ -1,14 +1,12 @@
 (ns friend-oauth2.workflow-facts
-  (:use
-   midje.sweet
-   friend-oauth2.test-helpers
-   friend-oauth2.fixtures)
-  (:require
-   [friend-oauth2.workflow :as oauth2]
-   [cemerick.friend :as friend]
-   [cemerick.url :as url]
-   [ring.util.response :refer [get-header]]
-   [ring.mock.request :as ring-mock]))
+  (:use midje.sweet
+        friend-oauth2.test-helpers
+        friend-oauth2.fixtures)
+  (:require [friend-oauth2.workflow :as oauth2]
+            [cemerick.friend :as friend]
+            [cemerick.url :as url]
+            [ring.util.response :refer [get-header]]
+            [ring.mock.request :as ring-mock]))
 
 (fact
  "A user can authenticate via OAuth2
