@@ -25,9 +25,9 @@
   (GET "/status" request
        (let [count (:count (:session request) 0)
              session (assoc (:session request) :count (inc count))]
-         (-> (ring.util.response/response
-              (str "<p>We've hit the session page " (:count session)
-                   " times.</p><p>The current session: " session "</p>"))
+         (-> (str "<p>We've hit the session page " (:count session)
+                  " times.</p><p>The current session: " session "</p>")
+             (ring.util.response/response)
              (assoc :session session))))
   (GET "/authlink" request
        (friend/authorize #{::user} "Authorized page."))
