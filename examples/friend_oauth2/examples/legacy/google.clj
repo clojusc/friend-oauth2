@@ -3,7 +3,6 @@
             [cemerick.friend [workflows :as workflows]
                              [credentials :as creds]]
             [cemerick.url :as url]
-            [cheshire.core :as json]
             [compojure.core :as compojure :refer [GET ANY defroutes]]
             [compojure.handler :as handler]
             [compojure.route :as route]
