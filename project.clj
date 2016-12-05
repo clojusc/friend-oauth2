@@ -25,7 +25,9 @@
         [midje "1.8.3"]
         [ring-mock "0.1.5"]]
       :plugins [
-        [lein-midje "3.2.1"]]}
+        [jonase/eastwood "0.2.3"]
+        [lein-midje "3.2.1"]
+        [lein-kibit "0.1.3"]]}
     :clj15 {
       :dependencies [
         [org.clojure/clojure "1.5.0"]
