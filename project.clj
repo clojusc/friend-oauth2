@@ -28,12 +28,14 @@
       :dependencies [
         [com.cemerick/url "0.1.1"]
         [compojure "1.6.0-beta1"]
-        [midje "1.8.3"]
-        [ring-mock "0.1.5"]]
+        [midje "1.9.0-alpha6"]
+        [ring/ring-mock "0.3.0"
+          :exclusions [org.clojure/clojure
+                       ring/ring-codec]]]
       :plugins [
         [jonase/eastwood "0.2.3" :exclusions [org.clojure/clojure]]
-        [lein-midje "3.2.1"]
-        [lein-kibit "0.1.3"]]}
+        [lein-kibit "0.1.3"]
+        [lein-midje "3.2.1" :exclusions [midje]]]}
     ;; XXX Reader macros not supported in anything less than Clojure 1.7
     ;; :clj15 {
     ;;   :dependencies [
