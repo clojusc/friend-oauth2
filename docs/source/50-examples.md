@@ -80,15 +80,6 @@ Here's the Github `friend-oauth2` example, runable from the commandline
             [org.httpkit.server :as server])
   (:gen-class))
 
-(def cfg
-  (config/client
-    :scope "user"
-    :auth-uri "https://github.com/login/oauth/authorize"
-    :token-uri "https://github.com/login/oauth/access_token"))
-
-(def client-config (config/->client-cfg cfg))
-(def uri-config (config/->uri-cfg cfg))
-
 (defn get-authentications
   [request]
   (get-in request [:session :cemerick.friend/identity :authentications]))
@@ -141,6 +132,12 @@ Here's the Github `friend-oauth2` example, runable from the commandline
        (friend/authorize #{::user} (render-repos-page request)))
   (friend/logout (ANY "/logout" request (ring.util.response/redirect "/"))))
 
+(def cfg
+  (config/client
+    :scope "user"
+    :auth-uri "https://github.com/login/oauth/authorize"
+    :token-uri "https://github.com/login/oauth/access_token"))
+
 (defn credential-fn
   [token]
   ;;lookup token in DB or whatever to fetch appropriate :roles
@@ -148,8 +145,7 @@ Here's the Github `friend-oauth2` example, runable from the commandline
 
 (def workflow
   (oauth2/workflow
-    {:client-config client-config
-     :uri-config uri-config
+    {:config cfg
      :access-token-parsefn util/get-access-token-from-params
      :credential-fn credential-fn}))
 
