@@ -83,12 +83,12 @@
 
 (defn workflow
   "Workflow for OAuth2"
-  [cfg]
-  (let [processed-cfg (process-config cfg)]
-    (log/trace "Config:\n" (logger/pprint processed-cfg))
+  [args]
+  (let [cfg (process-config args)]
+    (log/trace "Config:\n" (logger/pprint cfg))
     (fn [request]
       (log/trace "Request:\n" (logger/pprint request))
-      (when (is-oauth2-callback? processed-cfg request)
+      (when (is-oauth2-callback? cfg request)
         ;; Extracts code from request if we are getting here via OAuth2 callback.
         ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.2
         (let [{:keys [state code error]} (:params request)
@@ -99,14 +99,14 @@
           (log/debug "session-state:" session-state)
           (if (and (not (nil? code))
                    (= state session-state))
-            (when-let [access-token (request-token processed-cfg code)]
-              (when-let [auth-map ((:credential-fn processed-cfg
+            (when-let [access-token (request-token cfg code)]
+              (when-let [auth-map ((:credential-fn cfg
                                                    default-credential-fn)
                                    {:access-token access-token})]
                 (vary-meta auth-map merge {::friend/workflow :oauth2
                                            ::friend/redirect-on-auth? true
                                            :type ::friend/auth})))
-            (let [auth-error-fn (:auth-error-fn processed-cfg)]
+            (let [auth-error-fn (:auth-error-fn cfg)]
               (if (and error auth-error-fn)
                 (auth-error-fn error)
-                (redirect-to-provider! processed-cfg request)))))))))
+                (redirect-to-provider! cfg request)))))))))
