@@ -7,10 +7,16 @@
   :dependencies [
     [org.clojure/data.json "0.2.6"]
     [com.cemerick/friend "0.2.3"
-      :exclusions [org.apache.httpcomponents/httpclient]]
+      :exclusions [clj-time
+                   commons-codec
+                   commons-logging
+                   org.apache.httpcomponents/httpclient
+                   ring/ring-core
+                   slingshot]]
     [com.cemerick/url "0.1.1"]
     [ring "1.6.0-beta6"]
-    [ring/ring-codec "1.0.1"]
+    [ring/ring-defaults "0.3.0-beta1" :exclusions [ring/ring-core]]
+    [ring/ring-codec "1.0.1" :exclusions [commons-codec]]
     [ring/ring-jetty-adapter "1.6.0-beta6"]
     [clj-http "3.4.1"]
     [clojusc/twig "0.3.0"]
