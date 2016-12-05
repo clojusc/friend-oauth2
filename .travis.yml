@@ -7,7 +7,9 @@ jdk:
   - oraclejdk7
   - openjdk7
 env:
-  - CLOJURE_VERSION=clj16
+  # No reader conditionals for Clojure 1.5 or 1.6 ...
+  #- CLOJURE_VERSION=clj15
+  #- CLOJURE_VERSION=clj16
   - CLOJURE_VERSION=clj17
   - CLOJURE_VERSION=clj18
   #- CLOJURE_VERSION=clj19
