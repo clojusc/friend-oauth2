@@ -6,8 +6,7 @@
             [clojusc.twig :as logger]
             [compojure.core :as compojure :refer [GET ANY defroutes]]
             [compojure.handler :as handler]
-            [friend-oauth2.config :as config]
-            [friend-oauth2.workflow :as oauth2]
+            [friend-oauth2.service.facebook :as facebook]
             [friend-oauth2.util :as util]
             [org.httpkit.server :as server])
   (:gen-class))
@@ -42,25 +41,23 @@
 ;;; OAuth2 Configuration and Integration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def cfg
-  (config/client
-    :auth-uri "https://www.facebook.com/dialog/oauth"
-    :token-uri "https://graph.facebook.com/oauth/access_token"))
-
 (defn credential-fn
   [token]
   ;;lookup token in DB or whatever to fetch appropriate :roles
   {:identity token :roles #{::user}})
 
 (def workflow
-  (oauth2/workflow
-    {:config cfg
-     :access-token-parsefn util/get-access-token-from-params
+  (facebook/workflow
+    {:access-token-parsefn util/get-access-token-from-params
      :credential-fn credential-fn}))
 
 (def auth-opts
   {:allow-anon? true
    :workflows [workflow]})
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; App Server ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def app
   (-> app-routes
