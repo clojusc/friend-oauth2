@@ -2,6 +2,8 @@
   (:require [cemerick.friend :as friend]
             [cemerick.friend.workflows :as workflows]
             [cemerick.friend.credentials :as creds]
+            [clojure.tools.logging :as log]
+            [clojusc.twig :as logger]
             [compojure.core :as compojure :refer [GET ANY defroutes]]
             [compojure.handler :as handler]
             [friend-oauth2.config :as config]
@@ -63,4 +65,6 @@
 
 (defn -main
   [& args]
+  (logger/set-level! '[ring friend friend-oauth2] :info)
+  (log/info "Starting example server using App.net OAuth2 ...")
   (server/run-server app {:port 8999}))

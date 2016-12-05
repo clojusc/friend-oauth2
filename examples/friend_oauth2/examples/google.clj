@@ -2,6 +2,8 @@
   (:require [cemerick.friend :as friend]
             [cemerick.friend.workflows :as workflows]
             [cemerick.friend.credentials :as creds]
+            [clojure.tools.logging :as log]
+            [clojusc.twig :as logger]
             [compojure.core :as compojure :refer [GET ANY defroutes]]
             [compojure.handler :as handler]
             [friend-oauth2.config :as config]
@@ -9,15 +11,6 @@
             [friend-oauth2.util :as util]
             [org.httpkit.server :as server])
   (:gen-class))
-
-(def cfg
-  (config/client
-    :scope "email"
-    :auth-uri "https://accounts.google.com/o/oauth2/auth"
-    :token-uri "https://accounts.google.com/o/oauth2/token"))
-
-(def client-config (config/->client-cfg cfg))
-(def uri-config (config/->uri-cfg cfg))
 
 (defroutes app-routes
   (GET "/" request
@@ -46,10 +39,15 @@
   ;;lookup token in DB or whatever to fetch appropriate :roles
   {:identity token :roles #{::user}})
 
+(def cfg
+  (config/client
+    :scope "email"
+    :auth-uri "https://accounts.google.com/o/oauth2/auth"
+    :token-uri "https://accounts.google.com/o/oauth2/token"))
+
 (def workflow
   (oauth2/workflow
-    {:client-config client-config
-     :uri-config uri-config
+    {:config cfg
      :access-token-parsefn util/get-access-token-from-params
      :credential-fn credential-fn}))
 
@@ -64,4 +62,6 @@
 
 (defn -main
   [& args]
+  (logger/set-level! '[ring friend friend-oauth2] :info)
+  (log/info "Starting example server using Google OAuth2 ...")
   (server/run-server app {:port 8999}))
