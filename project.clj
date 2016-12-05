@@ -13,7 +13,6 @@
     [ring/ring-codec "1.0.1"]
     [ring/ring-jetty-adapter "1.6.0-beta6"]
     [clj-http "3.4.1"]
-    [prismatic/schema "1.1.3"]
     [clojusc/twig "0.3.0"]
     [crypto-random "1.2.0"]]
   :profiles {
@@ -68,8 +67,7 @@
     :examples {
       :source-paths ["examples"]
       :dependencies [
-        [cheshire "5.6.3"]
-        [compojure "1.5.1"]
+        [compojure "1.6.0-beta1"]
         [http-kit "2.2.0"]
         [ring-logger "0.7.6"]
         [ring/ring-defaults "0.3.0-beta1"]]}

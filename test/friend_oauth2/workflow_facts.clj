@@ -54,7 +54,7 @@
 
 (fact
  "On error response from authentication provider execute error function"
- 
+
  (let [authlink-response  (test-app (ring-mock/request :get "/authlink"))
        ring-session-val   (extract-ring-session-val authlink-response)
 
@@ -70,18 +70,10 @@
    (:status login-response)                                      => 302
    (re-find #"/authenticate"
             (get-header login-response "Location"))              => "/authenticate"
-            
-            
+
+
     (:status authlink-error)                                     => 200
     (:body authlink-error)                                       => "auth-error"))
-
-(fact
-  "Malformed client-config produces an exception"
-  (let [invalid-config       {:client-config client-config-fixture-invalid}
-        missing-field-config {:client-config client-config-fixture-missing-field}]
-    (oauth2/workflow invalid-config)       => (throws Exception)
-    (oauth2/workflow missing-field-config) => (throws Exception)))
-
 
 (future-fact
  "access-token-parsefn is used for the token if provided."

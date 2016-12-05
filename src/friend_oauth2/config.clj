@@ -1,5 +1,7 @@
 (ns friend-oauth2.config
-  (:require [friend-oauth2.util :as util]))
+  (:require [clojure.tools.logging :as log]
+            [clojusc.twig :as logger]
+            [friend-oauth2.util :as util]))
 
 (defrecord Client
   [;; authentication fields
@@ -93,35 +95,41 @@
 
 (defn ->client-cfg
   "Convert a `Client` record to a legacy client configuration map."
-  [cfg]
+  [client-record]
+  (log/debug "Converting client-record to client-config ...")
+  (log/trace "Record:")
+  (log/trace (logger/pprint client-record))
   (->LegacyClient
-    (:client-id cfg)
-    (:client-secret cfg)
-    {:domain (:redirect-domain cfg)
-     :path (:redirect-path cfg)}))
+    (:client-id client-record)
+    (:client-secret client-record)
+    {:domain (:redirect-domain client-record)
+     :path (:redirect-path client-record)}))
 
 (defn ->uri-cfg
   "Convert a `Client` record to a legacy URI configuration map."
-  [cfg]
+  [client-record]
+  (log/debug "Converting client-record to uri-config ...")
+  (log/trace "Record:")
+  (log/trace (logger/pprint client-record))
   (->LegacyURI
-    {:url (:auth-uri cfg)
-     :query (-> {:client_id (:client-id cfg)
-                 :response_type (:response-type cfg)
-                 :redirect_uri (:redirect-uri cfg)}
-                (update-legacy-map cfg :scope)
-                (update-legacy-map cfg :state)
-                (update-legacy-map cfg :access-type
-                                       :access_type)
-                (update-legacy-map cfg :prompt)
-                (update-legacy-map cfg :login-hint
-                                       :login_hint)
-                (update-legacy-map cfg :include-granted-scopes
-                                       :include_granted_scopes)
-                (update-legacy-map cfg :adnview)
-                (update-legacy-map cfg :allow-signup
-                                       :allow_signup))}
-     {:url (:token-uri cfg)
-      :query {:client_id (:client-id cfg)
-              :client_secret (:client-secret cfg)
-              :grant_type (:grant-type cfg)
-              :redirect_uri (:redirect-uri cfg)}}))
+    {:url (:auth-uri client-record)
+     :query (-> {:client_id (:client-id client-record)
+                 :response_type (:response-type client-record)
+                 :redirect_uri (:redirect-uri client-record)}
+                (update-legacy-map client-record :scope)
+                (update-legacy-map client-record :state)
+                (update-legacy-map client-record :access-type
+                                                 :access_type)
+                (update-legacy-map client-record :prompt)
+                (update-legacy-map client-record :login-hint
+                                                 :login_hint)
+                (update-legacy-map client-record :include-granted-scopes
+                                                 :include_granted_scopes)
+                (update-legacy-map client-record :adnview)
+                (update-legacy-map client-record :allow-signup
+                                                 :allow_signup))}
+     {:url (:token-uri client-record)
+      :query {:client_id (:client-id client-record)
+              :client_secret (:client-secret client-record)
+              :grant_type (:grant-type client-record)
+              :redirect_uri (:redirect-uri client-record)}}))

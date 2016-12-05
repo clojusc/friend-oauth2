@@ -1,26 +1,19 @@
 (ns friend-oauth2.examples.github
   (:require [cemerick.friend :as friend]
-            [cemerick.friend [workflows :as workflows]
-                             [credentials :as creds]]
+            [cemerick.friend.workflows :as workflows]
+            [cemerick.friend.credentials :as creds]
             [clj-http.client :as client]
             [clojure.data.json :as json]
+            [clojure.tools.logging :as log]
             [clojusc.twig :as logger]
             [compojure.core :as compojure :refer [GET ANY defroutes]]
             [compojure.handler :as handler]
             [friend-oauth2.config :as config]
             [friend-oauth2.workflow :as oauth2]
             [friend-oauth2.util :as util]
+            [ring.util.response :as response]
             [org.httpkit.server :as server])
   (:gen-class))
-
-(def cfg
-  (config/client
-    :scope "user"
-    :auth-uri "https://github.com/login/oauth/authorize"
-    :token-uri "https://github.com/login/oauth/access_token"))
-
-(def client-config (config/->client-cfg cfg))
-(def uri-config (config/->uri-cfg cfg))
 
 (defn get-authentications
   [request]
@@ -30,8 +23,11 @@
   ([request]
     (get-token request 0))
   ([request index]
-    (let [authentications (get-authentications request)]
-      (:access-token (nth (keys authentications) index)))))
+    (let [authentications (get-authentications request)
+          auths-keys (keys authentications)]
+      (log/debug "Got authentications:" authentications)
+      (log/debug "Got auths-keys:" auths-keys)
+      (:access-token (nth auths-keys index)))))
 
 (defn render-status-page [request]
   (let [count (:count (:session request) 0)
@@ -58,6 +54,8 @@
   [request]
   (let [access-token (get-token request)
         repos-response (get-github-repos access-token)]
+    (log/debug "Got token:" access-token)
+    (log/trace "Got repos:" (logger/pprint repos-response))
     (->> repos-response
          (map :name)
          (vec)
@@ -74,6 +72,12 @@
        (friend/authorize #{::user} (render-repos-page request)))
   (friend/logout (ANY "/logout" request (ring.util.response/redirect "/"))))
 
+(def cfg
+  (config/client
+    :scope "user"
+    :auth-uri "https://github.com/login/oauth/authorize"
+    :token-uri "https://github.com/login/oauth/access_token"))
+
 (defn credential-fn
   [token]
   ;;lookup token in DB or whatever to fetch appropriate :roles
@@ -81,8 +85,7 @@
 
 (def workflow
   (oauth2/workflow
-    {:client-config client-config
-     :uri-config uri-config
+    {:config cfg
      :access-token-parsefn util/get-access-token-from-params
      :credential-fn credential-fn}))
 
@@ -97,4 +100,6 @@
 
 (defn -main
   [& args]
+  (logger/set-level! '[ring friend friend-oauth2] :info)
+  (log/info "Starting example server using Github OAuth2 ...")
   (server/run-server app {:port 8999}))

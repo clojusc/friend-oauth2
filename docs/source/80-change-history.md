@@ -30,13 +30,17 @@ matrix.
 
 ## 0.2.0
 
-This release integrates the wiki documentation, the Codox docs, the README, and
-the examples from the previously separate friend-oauth2-examples repo.
+The 0.2.0 release integrated the wiki documentation, the Codox docs, the
+README, and the examples from the previously separate `friend-oauth2-examples`
+repo.
 
 
 ## 0.3.0
 
-TBD
+This release introduces a new (and fully backwards-compatible) way of
+configuring OAuth2 clients using records. Also note that a new dependency was
+introdued that, due to its use of reader conditionals, only supports Clojure
+version 1.7 and higher.
 
 
 [0.1.3-transitional]: https://github.com/clojusc/friend-oauth2/releases/tag/0.1.3-transitional

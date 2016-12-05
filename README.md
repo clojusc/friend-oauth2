@@ -60,13 +60,17 @@ this time.
 
 ### 0.2.0
 
-The 0.2.0 release integrated the wiki documentation, the Codox docs, the README,
-and the examples from the previously separate friend-oauth2-examples repo.
+The 0.2.0 release integrated the wiki documentation, the Codox docs, the
+README, and the examples from the previously separate `friend-oauth2-examples`
+repo.
 
 
 ### 0.3.0
 
-TBD
+This release introduces a new (and fully backwards-compatible) way of
+configuring OAuth2 clients using records. Also note that a new dependency was
+introdued that, due to its use of reader conditionals, only supports Clojure
+version 1.7 and higher.
 
 For the complete change history, see the [documentation page][change history].
 
@@ -110,7 +114,7 @@ Distributed under the MIT License (http://dd.mit-license.org/)
 [logo-large]: resources/images/friend-oauth-logo-x1000.png
 [tag-badge]: https://img.shields.io/github/tag/clojusc/friend-oauth2.svg
 [tag]: https://github.com/clojusc/friend-oauth2/tags
-[clojure-v]: https://img.shields.io/badge/clojure-1.5+-blue.svg
+[clojure-v]: https://img.shields.io/badge/clojure-1.7+-blue.svg
 [project]: https://github.com/clojusc/friend-oauth2/blob/master/project.clj
 [clojars]: https://clojars.org/clojusc/friend-oauth2
 [clojars-badge]: https://img.shields.io/clojars/v/clojusc/friend-oauth2.svg

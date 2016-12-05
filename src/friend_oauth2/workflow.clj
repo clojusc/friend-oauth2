@@ -2,20 +2,16 @@
   (:require [cemerick.friend :as friend]
             [clj-http.client :as client]
             [clojure.tools.logging :as log]
+            [clojusc.twig :as logger]
+            [friend-oauth2.config :as config]
             [friend-oauth2.util :as util]
-            [ring.util.request :as request]
-            [schema.core :as s]))
+            [ring.util.request :as request]))
 
-(s/defschema ClientConfig {:client-id String
-                           :client-secret String
-                           :callback {:domain String
-                                      :path String}})
-
-(defn- default-credential-fn
+(defn default-credential-fn
   [creds]
   {:identity (:access-token creds)})
 
-(defn- is-oauth2-callback?
+(defn is-oauth2-callback?
   [config req]
   (or (= (request/path-info req)
          (get-in config [:client-config :callback :path]))
@@ -25,7 +21,7 @@
                  ::friend/auth-config
                  :login-uri)))))
 
-(defn- request-token
+(defn request-token
   "POSTs request to OAauth2 provider for authorization token."
   [{:keys [uri-config access-token-parsefn]} code]
   (let [access-token-uri (:access-token-uri uri-config)
@@ -42,7 +38,7 @@
                     ;;     here, e.g., :basic-auth [user pass]
                     }))))
 
-(defn- redirect-to-provider!
+(defn redirect-to-provider!
   "Redirects user to OAuth2 provider.
 
   The `code` parameter should be in the response."
@@ -57,29 +53,60 @@
         ring.util.response/redirect
         (assoc :session session-with-af-token))))
 
-(s/defn ^:always-validate workflow
+(defn process-config?
+  "Check whether the config needs to be processed."
+  [workflow-args]
+  (and (not (nil? (:config workflow-args)))
+       (and (nil? (:uri-config workflow-args))
+            (nil? (:client-config workflow-args)))))
+
+(defn not-process-config?
+  "Check whether the config doesn't need to be processed."
+  [workflow-args]
+  (not (process-config? workflow-args)))
+
+(defn process-config
+  "This function allows workflow to support legacy parameters `:client-config`
+  and `uri-config` while also supporting the new configuration key `:config`.
+  It does this by generating the legacy configurations when the new
+  configuration data is present. It not, it assumes that legacy configuration
+  is being utilized."
+  [workflow-args]
+  (log/debug "Preparing to process config ...")
+  (let [cfg (:config workflow-args)]
+    (if (not-process-config? workflow-args)
+      workflow-args
+      (assoc
+        workflow-args
+        :client-config (config/->client-cfg cfg)
+        :uri-config (config/->uri-cfg cfg)))))
+
+(defn workflow
   "Workflow for OAuth2"
-  [config :- {(s/required-key :client-config) ClientConfig
-               s/Any s/Any}] ;; The rest of config.
-  (fn [request]
-    (when (is-oauth2-callback? config request)
-      ;; Extracts code from request if we are getting here via OAuth2 callback.
-      ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.2
-      (let [{:keys [state code error]} (:params request)
-            session-state (util/extract-anti-forgery-token request)]
-        (log/debug "state:" state)
-        (log/debug "code:" code)
-        (log/debug "error:" error)
-        (log/debug "session-state:" session-state)
-        (if (and (not (nil? code))
-                 (= state session-state))
-          (when-let [access-token (request-token config code)]
-            (when-let [auth-map ((:credential-fn config default-credential-fn)
-                                 {:access-token access-token})]
-              (vary-meta auth-map merge {::friend/workflow :oauth2
-                                         ::friend/redirect-on-auth? true
-                                         :type ::friend/auth})))
-          (let [auth-error-fn (:auth-error-fn config)]
-            (if (and error auth-error-fn)
-              (auth-error-fn error)
-              (redirect-to-provider! config request))))))))
+  [cfg]
+  (let [processed-cfg (process-config cfg)]
+    (log/trace "Config:\n" (logger/pprint processed-cfg))
+    (fn [request]
+      (log/trace "Request:\n" (logger/pprint request))
+      (when (is-oauth2-callback? processed-cfg request)
+        ;; Extracts code from request if we are getting here via OAuth2 callback.
+        ;; http://tools.ietf.org/html/draft-ietf-oauth-v2-31#section-4.1.2
+        (let [{:keys [state code error]} (:params request)
+              session-state (util/extract-anti-forgery-token request)]
+          (log/debug "state:" state)
+          (log/debug "code:" code)
+          (log/debug "error:" error)
+          (log/debug "session-state:" session-state)
+          (if (and (not (nil? code))
+                   (= state session-state))
+            (when-let [access-token (request-token processed-cfg code)]
+              (when-let [auth-map ((:credential-fn processed-cfg
+                                                   default-credential-fn)
+                                   {:access-token access-token})]
+                (vary-meta auth-map merge {::friend/workflow :oauth2
+                                           ::friend/redirect-on-auth? true
+                                           :type ::friend/auth})))
+            (let [auth-error-fn (:auth-error-fn processed-cfg)]
+              (if (and error auth-error-fn)
+                (auth-error-fn error)
+                (redirect-to-provider! processed-cfg request)))))))))
