@@ -12,6 +12,10 @@
             [org.httpkit.server :as server])
   (:gen-class))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Mini Webapp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defroutes app-routes
   (GET "/" request
     (str "<a href=\"/admin\">Admin Pages</a><br />"
@@ -34,16 +38,20 @@
        (friend/authorize #{::admin} "Only admins can see this page."))
   (friend/logout (ANY "/logout" request (ring.util.response/redirect "/"))))
 
-(defn credential-fn
-  [token]
-  ;;lookup token in DB or whatever to fetch appropriate :roles
-  {:identity token :roles #{::user}})
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; OAuth2 Configuration and Integration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def cfg
   (config/client
     :scope "email"
     :auth-uri "https://accounts.google.com/o/oauth2/auth"
     :token-uri "https://accounts.google.com/o/oauth2/token"))
+
+(defn credential-fn
+  [token]
+  ;;lookup token in DB or whatever to fetch appropriate :roles
+  {:identity token :roles #{::user}})
 
 (def workflow
   (oauth2/workflow

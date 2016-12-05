@@ -12,14 +12,9 @@
             [org.httpkit.server :as server])
   (:gen-class))
 
-(def cfg
-  (config/client
-    :scope "stream,email"
-    :auth-uri "https://account.app.net/oauth/authenticate"
-    :token-uri "https://account.app.net/oauth/access_token"))
-
-(def client-config (config/->client-cfg cfg))
-(def uri-config (config/->uri-cfg cfg))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Mini Webapp ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defroutes app-routes
   (GET "/" request
@@ -43,6 +38,16 @@
        (friend/authorize #{::admin} "Only admins can see this page."))
   (friend/logout (ANY "/logout" request (ring.util.response/redirect "/"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; OAuth2 Configuration and Integration ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def cfg
+  (config/client
+    :scope "stream,email"
+    :auth-uri "https://account.app.net/oauth/authenticate"
+    :token-uri "https://account.app.net/oauth/access_token"))
+
 (defn credential-fn
   [token]
   ;;lookup token in DB or whatever to fetch appropriate :roles
@@ -50,8 +55,7 @@
 
 (def workflow
   (oauth2/workflow
-    {:client-config client-config
-     :uri-config uri-config
+    {:config cfg
      :credential-fn credential-fn}))
 
 (def auth-opts
