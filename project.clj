@@ -67,7 +67,7 @@
     :examples {
       :source-paths ["examples"]
       :dependencies [
-        [compojure "1.5.1"]
+        [compojure "1.6.0-beta1"]
         [http-kit "2.2.0"]
         [ring-logger "0.7.6"]
         [ring/ring-defaults "0.3.0-beta1"]]}
