@@ -67,7 +67,6 @@
     :examples {
       :source-paths ["examples"]
       :dependencies [
-        [cheshire "5.6.3"]
         [compojure "1.5.1"]
         [http-kit "2.2.0"]
         [ring-logger "0.7.6"]
