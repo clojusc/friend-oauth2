@@ -68,9 +68,11 @@ repo.
 ### 0.3.0
 
 This release introduces a new (and fully backwards-compatible) way of
-configuring OAuth2 clients using records. Also note that a new dependency was
-introdued that, due to its use of reader conditionals, only supports Clojure
-version 1.7 and higher.
+configuring OAuth2 clients using records. This was then used to provide
+service-specific namespaces with convenience functions and URL configurations.
+The non-legacy examples were updated with this approach. Also note that a new
+dependency was introdued that, due to its use of reader conditionals, only
+supports Clojure version 1.7 and higher.
 
 For the complete change history, see the [documentation page][change history].
 
