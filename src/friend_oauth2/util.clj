@@ -50,6 +50,7 @@
 (defn extract-access-token
   "Returns the access token from a JSON response body"
   [{body :body}]
+  (log/debug "Got body:\n" body)
   (-> body
       (json/read-str :key-fn keyword)
       :access_token))
@@ -58,6 +59,7 @@
   "Alternate function to allow retrieve
    access_token when passed in as form params."
   [{body :body}]
+  (log/debug "Got body:\n" body)
   (-> body
       ring.util.codec/form-decode
       (get "access_token")))
