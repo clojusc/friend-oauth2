@@ -50,3 +50,12 @@
   "Generates random string for anti-forgery-token."
   []
   (string/replace (random/base64 60) #"[\+=/]" "-"))
+
+(defn extract-basic-auth [{:keys [basic-auth]}]
+  (if (empty? basic-auth)
+      nil
+      (str (:client_id basic-auth) ":" (:client_secret basic-auth))))
+
+(defn rm-empty-values [map]
+  (into {}
+        (filter (fn [[k v]] (not(empty? v))) (into [] map))))
