@@ -13,9 +13,9 @@
 (defn format-authn-uri
   "Formats the client authentication uri"
   [{{:keys [query url]} :authentication-uri} anti-forgery-token]
-  (log/error "query:" query)
-  (log/error "url:" url)
-  (log/error "anti-forgery-token:" anti-forgery-token)
+  (log/debug "query:" query)
+  (log/debug "url:" url)
+  (log/debug "anti-forgery-token:" anti-forgery-token)
   (->> (assoc query :state anti-forgery-token)
        ring-codec/form-encode
        (str url "?")))
